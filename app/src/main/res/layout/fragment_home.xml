@@ -3,18 +3,57 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_wood">
 
-    <!-- TODO: agregar logo/animación de botella, botones de jugar, retos e instrucciones -->
+    <!-- Toolbar personalizada (HU 3.0) -->
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_custom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Botella central (HU 2.0) -->
+    <ImageView
+        android:id="@+id/imgBotella"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:src="@android:drawable/ic_menu_camera"
+        android:contentDescription="@string/cd_botella"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/btnPresioname"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Contador regresivo (HU 2.0) -->
     <TextView
-        android:id="@+id/tvWelcome"
+        android:id="@+id/tvContador"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Inicio"
-        android:textSize="24sp"
+        android:text="@string/contador_inicial"
+        android:textColor="#FF6B00"
+        android:textSize="48sp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="@id/imgBotella"
+        app:layout_constraintBottom_toBottomOf="@id/imgBotella"
+        app:layout_constraintStart_toStartOf="@id/imgBotella"
+        app:layout_constraintEnd_toEndOf="@id/imgBotella" />
+
+    <!-- Botón parpadeante (HU 2.0) -->
+    <Button
+        android:id="@+id/btnPresioname"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:text="@string/btn_presioname"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#FF6B00"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="48dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

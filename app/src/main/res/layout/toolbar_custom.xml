@@ -1,11 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.appbar.MaterialToolbar
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/toolbar"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
-    android:background="?attr/colorPrimary">
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp"
+    app:cardBackgroundColor="@android:color/black"
+    app:cardCornerRadius="30dp"
+    app:cardElevation="8dp">
 
-    <!-- TODO: personalizar con logo, título del juego o menú de opciones -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
 
-</com.google.android.material.appbar.MaterialToolbar>
+        <!-- Estrella: Calificar app (HU 4.0) -->
+        <ImageButton
+            android:id="@+id/btnCalificar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:src="@drawable/ic_star"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_calificar" />
+
+        <!-- Audio: Encender/apagar música (HU 3.0) -->
+        <ImageButton
+            android:id="@+id/btnAudio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:src="@drawable/ic_volume_up"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_audio" />
+
+        <!-- Instrucciones (HU 5.0) -->
+        <ImageButton
+            android:id="@+id/btnInstrucciones"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:src="@drawable/ic_sports_esports"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_instrucciones" />
+
+        <!-- Agregar retos (HU 6.0) -->
+        <ImageButton
+            android:id="@+id/btnRetos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:src="@drawable/ic_add_circle"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_retos" />
+
+        <!-- Compartir (HU 10) -->
+        <ImageButton
+            android:id="@+id/btnCompartir"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:src="@drawable/ic_share"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_compartir" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

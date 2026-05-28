@@ -1,7 +1,14 @@
 <resources>
     <string name="app_name">equipoOnce</string>
+    <string name="cd_calificar">Calificar app</string>
+    <string name="cd_audio">Audio</string>
+    <string name="cd_instrucciones">Instrucciones</string>
+    <string name="cd_retos">Agregar retos</string>
+    <string name="cd_compartir">Compartir app</string>
+    <string name="contador_inicial">3</string>
+    <string name="btn_presioname">Presióname</string>
+    <string name="cd_botella">Botella del juego</string>
     <string name="cd_editar">Editar reto</string>
     <string name="cd_eliminar">Eliminar reto</string>
     <string name="hint_descripcion_reto">Descripción del reto</string>
-    <string name="cd_retos">Agregar retos</string>
 </resources>
