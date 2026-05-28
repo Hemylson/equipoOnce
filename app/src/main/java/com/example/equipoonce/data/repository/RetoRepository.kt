@@ -1,13 +1,28 @@
 package com.example.equipoonce.data.repository
 
-import com.example.equipoonce.data.local.RetoDao
+import android.content.Context
+import com.example.equipoonce.data.local.AppDatabase
 import com.example.equipoonce.data.local.RetoEntity
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class RetoRepository(private val retoDao: RetoDao) {
-    val allRetos: Flow<List<RetoEntity>> = retoDao.getAllRetos()
+class RetoRepository(context: Context) {
 
-    suspend fun insert(reto: RetoEntity) = retoDao.insertReto(reto)
-    suspend fun update(reto: RetoEntity) = retoDao.updateReto(reto)
-    suspend fun delete(reto: RetoEntity) = retoDao.deleteReto(reto)
+    private val dao = AppDatabase.getDatabase(context).retoDao()
+
+    suspend fun insertar(reto: RetoEntity) {
+        withContext(Dispatchers.IO) { dao.insertar(reto) }
+    }
+
+    suspend fun obtenerTodos(): List<RetoEntity> {
+        return withContext(Dispatchers.IO) { dao.obtenerTodos() }
+    }
+
+    suspend fun actualizar(reto: RetoEntity) {
+        withContext(Dispatchers.IO) { dao.actualizar(reto) }
+    }
+
+    suspend fun eliminar(reto: RetoEntity) {
+        withContext(Dispatchers.IO) { dao.eliminar(reto) }
+    }
 }

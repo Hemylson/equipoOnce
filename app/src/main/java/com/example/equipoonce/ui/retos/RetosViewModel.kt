@@ -1,30 +1,50 @@
 package com.example.equipoonce.ui.retos
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.equipoonce.data.local.RetoEntity
 import com.example.equipoonce.data.repository.RetoRepository
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class RetosViewModel(private val repository: RetoRepository) : ViewModel() {
+class RetosViewModel(application: Application) : AndroidViewModel(application) {
 
-    // TODO: implementar ViewModelFactory para inyectar RetoRepository
-    val retos: StateFlow<List<RetoEntity>> = repository.allRetos
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    private val repository = RetoRepository(application)
 
-    fun addReto(reto: RetoEntity) = viewModelScope.launch {
-        // TODO: validar que la descripción no esté vacía antes de insertar
-        repository.insert(reto)
+    private val _lista = MutableLiveData<List<RetoEntity>>()
+    val lista: LiveData<List<RetoEntity>> get() = _lista
+
+    private val _loading = MutableLiveData(false)
+    val loading: LiveData<Boolean> get() = _loading
+
+    fun cargarRetos() {
+        viewModelScope.launch {
+            _loading.value = true
+            _lista.value = repository.obtenerTodos()
+            _loading.value = false
+        }
     }
 
-    fun updateReto(reto: RetoEntity) = viewModelScope.launch {
-        repository.update(reto)
+    fun agregarReto(descripcion: String) {
+        viewModelScope.launch {
+            repository.insertar(RetoEntity(descripcion = descripcion))
+            cargarRetos()
+        }
     }
 
-    fun deleteReto(reto: RetoEntity) = viewModelScope.launch {
-        repository.delete(reto)
+    fun editarReto(reto: RetoEntity) {
+        viewModelScope.launch {
+            repository.actualizar(reto)
+            cargarRetos()
+        }
+    }
+
+    fun eliminarReto(reto: RetoEntity) {
+        viewModelScope.launch {
+            repository.eliminar(reto)
+            cargarRetos()
+        }
     }
 }

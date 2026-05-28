@@ -1,24 +1,19 @@
 package com.example.equipoonce.data.local
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
-import kotlinx.coroutines.flow.Flow
+import androidx.room.*
 
 @Dao
 interface RetoDao {
-    @Query("SELECT * FROM retos")
-    fun getAllRetos(): Flow<List<RetoEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertReto(reto: RetoEntity)
+    suspend fun insertar(reto: RetoEntity)
+
+    @Query("SELECT * FROM retos ORDER BY id DESC")
+    suspend fun obtenerTodos(): List<RetoEntity>
 
     @Update
-    suspend fun updateReto(reto: RetoEntity)
+    suspend fun actualizar(reto: RetoEntity)
 
     @Delete
-    suspend fun deleteReto(reto: RetoEntity)
+    suspend fun eliminar(reto: RetoEntity)
 }

@@ -8,4 +8,7 @@
     <string name="contador_inicial">3</string>
     <string name="btn_presioname">Presióname</string>
     <string name="cd_botella">Botella del juego</string>
+    <string name="cd_editar">Editar reto</string>
+    <string name="cd_eliminar">Eliminar reto</string>
+    <string name="hint_descripcion_reto">Descripción del reto</string>
 </resources>
