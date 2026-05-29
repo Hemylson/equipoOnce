@@ -11,4 +11,12 @@
     <string name="cd_editar">Editar reto</string>
     <string name="cd_eliminar">Eliminar reto</string>
     <string name="hint_descripcion_reto">Descripción del reto</string>
+
+    <string name="title_rules">Reglas del Juego</string>
+    <string name="title_how_to_play">¿Cómo se juega?</string>
+    <string name="desc_how_to_play">Los jugadores forman un círculo y en el centro colocan el dispositivo móvil, luego tocan el botón parpadeante para girar la botella.\nEl jugador que señale la botella debe cumplir el reto que lanza la app, de lo contrario abandona el juego.</string>
+    <string name="title_who_wins">¿Quién gana?</string>
+    <string name="desc_who_wins">Gana el último jugador que no abandone el juego.</string>
+
+
 </resources>
