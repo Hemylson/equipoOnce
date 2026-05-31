@@ -18,5 +18,8 @@
     <string name="title_who_wins">¿Quién gana?</string>
     <string name="desc_who_wins">Gana el último jugador que no abandone el juego.</string>
 
+    <string name="btn_cerrar">Cerrar</string>
+    <string name="cd_pokemon_image">Imagen del Pokémon asignado al reto</string>
+
 
 </resources>
