@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     // kotlin.android ya está incluido en AGP 9.x — no aplicar por separado
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -33,6 +34,9 @@ android {
     }
     buildFeatures {
         viewBinding = true
+    }
+    kotlinOptions {
+        jvmTarget = "11"
     }
 }
 

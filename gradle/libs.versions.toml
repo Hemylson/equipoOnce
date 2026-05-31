@@ -1,5 +1,5 @@
 [versions]
-agp = "9.2.1"
+agp = "8.10.1"
 kotlin = "2.2.10"
 ksp = "2.2.10-2.0.2"
 coreKtx = "1.15.0"
@@ -46,5 +46,5 @@ androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version = "2.2.0" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
