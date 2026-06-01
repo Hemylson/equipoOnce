@@ -1,24 +1,24 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
     namespace = "com.example.equipoonce"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 34 // O versión 35, según la que use tu equipo equipoOnce
 
     defaultConfig {
         applicationId = "com.example.equipoonce"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 34 // O la versión que tengan configurada
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    // ... de aquí en adelante dejas el resto del archivo igual (buildTypes, compileOptions, etc.)
+
 
     buildTypes {
         release {
@@ -30,8 +30,13 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    compileSdk = 36
+    buildToolsVersion = "35.0.0"
+    kotlinOptions {
+        jvmTarget = "17"
     }
 }
 
@@ -44,6 +49,7 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.core.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)

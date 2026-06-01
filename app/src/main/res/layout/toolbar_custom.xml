@@ -24,7 +24,7 @@
             android:layout_weight="1"
             android:minWidth="48dp"
             android:minHeight="48dp"
-            android:src="@android:drawable/ic_menu_star"
+            android:src="@drawable/ic_menu_star"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/cd_calificar" />
 
