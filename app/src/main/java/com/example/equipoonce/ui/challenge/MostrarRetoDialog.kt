@@ -1,8 +1,11 @@
 package com.example.equipoonce.ui.challenge
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import com.example.equipoonce.databinding.DialogMostrarRetoBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -17,11 +20,16 @@ class MostrarRetoDialog : DialogFragment() {
         _binding = DialogMostrarRetoBinding.inflate(layoutInflater)
         return MaterialAlertDialogBuilder(requireContext())
             .setView(binding.root)
-            .setPositiveButton("Hecho") { _, _ ->
-                // TODO: registrar reto como completado y llamar a obtenerRetoAleatorio
-            }
+            .setPositiveButton("Hecho", null)
             .setNegativeButton("Pasar", null)
             .create()
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        if (!parentFragmentManager.isDestroyed) {
+            setFragmentResult(RESULT_KEY, bundleOf(RESULT_BUNDLE_KEY to true))
+        }
     }
 
     override fun onDestroyView() {
@@ -31,5 +39,7 @@ class MostrarRetoDialog : DialogFragment() {
 
     companion object {
         const val TAG = "MostrarRetoDialog"
+        const val RESULT_KEY = "RETO_RESULT"
+        const val RESULT_BUNDLE_KEY = "RETO_RESULT_CLOSED"
     }
 }
