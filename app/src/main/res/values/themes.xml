@@ -6,4 +6,12 @@
     </style>
 
     <style name="Theme.EquipoOnce" parent="Base.Theme.EquipoOnce" />
+
+    <!-- CA-1: Tema sin ActionBar ni toolbar para el splash -->
+    <style name="Theme.EquipoOnce.NoActionBar" parent="Theme.EquipoOnce">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
 </resources>
