@@ -7,7 +7,6 @@ import com.example.equipoonce.R
 class GameAudioManager(private val context: Context) {
 
     private var backgroundPlayer: MediaPlayer? = null
-    private var spinPlayer: MediaPlayer? = null
 
     fun playBackground() {
         if (backgroundPlayer == null) {
@@ -37,22 +36,9 @@ class GameAudioManager(private val context: Context) {
         return backgroundPlayer?.isPlaying == true
     }
 
-    fun playSpinSound() {
-        spinPlayer?.release()
-        spinPlayer = MediaPlayer.create(context, R.raw.spin_sound).apply {
-            setOnCompletionListener {
-                it.release()
-                spinPlayer = null
-            }
-            start()
-        }
-    }
-
     fun stopAllSounds() {
         backgroundPlayer?.stop()
         backgroundPlayer?.release()
         backgroundPlayer = null
-        spinPlayer?.release()
-        spinPlayer = null
     }
 }

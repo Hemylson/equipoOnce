@@ -1,54 +1,41 @@
 package com.example.equipoonce.ui.home
 
-import android.animation.ObjectAnimator
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.equipoonce.databinding.FragmentHomeBinding
-import com.example.equipoonce.ui.challenge.MostrarRetoDialog
+import com.example.equipoonce.R
 import com.example.equipoonce.utils.GameAudioManager
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(R.layout.fragment_home) {
 
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var audioManager: GameAudioManager
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    private lateinit var btnPresioname: Button
+    private lateinit var tvContador: TextView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         audioManager = GameAudioManager(requireContext())
         audioManager.playBackground()
 
-        configurarToolbar()
+        btnPresioname = view.findViewById(R.id.btnPresioname)
+        tvContador = view.findViewById(R.id.tvContador)
+
+        configurarToolbar(view)
         configurarBoton()
         observarViewModel()
-
-        childFragmentManager.setFragmentResultListener(
-            MostrarRetoDialog.RESULT_KEY,
-            viewLifecycleOwner
-        ) { _, _ ->
-            viewModel.onRetoDialogClosed()
-        }
     }
 
     override fun onResume() {
         super.onResume()
-        if (viewModel.isSpinning.value != true) {
+        if (!viewModel.isCounting()) {
             audioManager.resumeBackground()
         }
     }
@@ -61,17 +48,16 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         audioManager.stopAllSounds()
-        _binding = null
     }
 
-    private fun configurarToolbar() {
-        binding.toolbar.btnCalificar.setOnClickListener {
+    private fun configurarToolbar(view: View) {
+        view.findViewById<ImageButton>(R.id.btnCalificar).setOnClickListener {
             animarBoton(it)
             val uri = Uri.parse("https://play.google.com/store/apps/details?id=com.nequi.MobileApp")
             startActivity(Intent(Intent.ACTION_VIEW, uri))
         }
 
-        binding.toolbar.btnCompartir.setOnClickListener {
+        view.findViewById<ImageButton>(R.id.btnCompartir).setOnClickListener {
             animarBoton(it)
             val mensaje = "App pico botella\nSolo los valientes lo juegan !!\nhttps://play.google.com/store/apps/details?id=com.nequi.MobileApp"
             val intent = Intent(Intent.ACTION_SEND).apply {
@@ -81,7 +67,7 @@ class HomeFragment : Fragment() {
             startActivity(Intent.createChooser(intent, "Compartir via"))
         }
 
-        binding.toolbar.btnAudio.setOnClickListener {
+        view.findViewById<ImageButton>(R.id.btnAudio).setOnClickListener {
             animarBoton(it)
             if (audioManager.isBackgroundPlaying()) {
                 audioManager.pauseBackground()
@@ -106,47 +92,25 @@ class HomeFragment : Fragment() {
             repeatMode = AlphaAnimation.REVERSE
             repeatCount = AlphaAnimation.INFINITE
         }
-        binding.btnPresioname.startAnimation(anim)
-        binding.btnPresioname.setOnClickListener {
-            viewModel.girarBotella()
+        btnPresioname.startAnimation(anim)
+        btnPresioname.setOnClickListener {
+            viewModel.onPresionameClicked()
         }
     }
 
     private fun observarViewModel() {
-        viewModel.isSpinning.observe(viewLifecycleOwner) { girando ->
-            binding.btnPresioname.visibility = if (girando) View.INVISIBLE else View.VISIBLE
-            binding.btnPresioname.isEnabled = !girando
-            if (girando) {
-                audioManager.pauseBackground()
-                audioManager.playSpinSound()
-            }
-        }
-
         viewModel.contador.observe(viewLifecycleOwner) { valor ->
-            binding.tvContador.visibility = if (valor != null) View.VISIBLE else View.INVISIBLE
-            binding.tvContador.text = valor?.toString() ?: ""
-        }
-
-        viewModel.rotationAngle.observe(viewLifecycleOwner) { angulo ->
-            if (angulo != binding.imgBotella.rotation) {
-                val animator = ObjectAnimator.ofFloat(
-                    binding.imgBotella,
-                    View.ROTATION,
-                    binding.imgBotella.rotation,
-                    angulo
-                ).apply {
-                    duration = viewModel.spinDuration.value ?: 4000L
-                }
-                animator.start()
+            if (valor != null) {
+                tvContador.visibility = View.VISIBLE
+                tvContador.text = valor.toString()
+            } else {
+                tvContador.visibility = View.INVISIBLE
             }
         }
 
-        viewModel.showRetoDialogEvent.observe(viewLifecycleOwner) {
-            mostrarDialogoReto()
+        viewModel.isButtonVisible.observe(viewLifecycleOwner) { visible ->
+            btnPresioname.visibility = if (visible) View.VISIBLE else View.INVISIBLE
+            btnPresioname.isEnabled = visible
         }
-    }
-
-    private fun mostrarDialogoReto() {
-        MostrarRetoDialog().show(childFragmentManager, MostrarRetoDialog.TAG)
     }
 }
