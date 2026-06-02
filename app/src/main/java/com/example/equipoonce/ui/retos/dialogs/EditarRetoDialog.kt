@@ -1,36 +1,44 @@
 package com.example.equipoonce.ui.retos.dialogs
 
-import android.app.Dialog
-import android.os.Bundle
-import androidx.fragment.app.DialogFragment
+import android.app.AlertDialog
+import android.content.Context
+import android.view.LayoutInflater
 import com.example.equipoonce.databinding.DialogEditarRetoBinding
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class EditarRetoDialog : DialogFragment() {
-
-    private var _binding: DialogEditarRetoBinding? = null
-    private val binding get() = _binding!!
-
-    // TODO: recibir RetoEntity como argumento via Bundle y pre-poblar campos
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        _binding = DialogEditarRetoBinding.inflate(layoutInflater)
-        return MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Editar Reto")
-            .setView(binding.root)
-            .setPositiveButton("Guardar") { _, _ ->
-                // TODO: actualizar RetoEntity con valores nuevos del formulario
-            }
-            .setNegativeButton("Cancelar", null)
-            .create()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
+class EditarRetoDialog {
     companion object {
-        const val TAG = "EditarRetoDialog"
+        fun show(
+            context: Context,
+            descripcionActual: String,
+            onGuardar: (String) -> Unit
+        ) {
+            val binding = DialogEditarRetoBinding.inflate(
+                LayoutInflater.from(context)
+            )
+            val dialog = AlertDialog.Builder(context)
+                .setView(binding.root)
+                .create()
+
+            dialog.setCancelable(false)
+            dialog.window?.setBackgroundDrawableResource(
+                android.R.color.transparent
+            )
+
+            // Precarga el texto actual del reto
+            binding.etReto.setText(descripcionActual)
+
+            binding.btnCancelar.setOnClickListener { dialog.dismiss() }
+
+            binding.btnGuardar.setOnClickListener {
+                val descripcion = binding.etReto.text.toString().trim()
+                if (descripcion.isNotEmpty()) {
+                    onGuardar(descripcion)
+                    dialog.dismiss()
+                }
+            }
+
+            dialog.show()
+        }
     }
 }
+
