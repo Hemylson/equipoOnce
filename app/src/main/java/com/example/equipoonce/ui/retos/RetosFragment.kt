@@ -8,6 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.equipoonce.databinding.FragmentRetosBinding
+import com.example.equipoonce.ui.retos.dialogs.AgregarRetoDialog
+import com.example.equipoonce.ui.retos.dialogs.EditarRetoDialog
+import com.example.equipoonce.ui.retos.dialogs.EliminarRetoDialog
 
 class RetosFragment : Fragment() {
 
@@ -44,11 +47,15 @@ class RetosFragment : Fragment() {
     private fun configurarRecyclerView() {
         adapter = RetosAdapter(
             onEdit = { reto ->
-                // TODO: HU 8.0 - Alan implementa EditarRetoDialog
+                EditarRetoDialog.show(requireContext(), reto.descripcion) { nuevaDescripcion ->
+                    viewModel.editarReto(reto.copy(descripcion = nuevaDescripcion))
+                }
             },
             onDelete = { reto ->
-                // TODO: HU 9.0 - Alan implementa EliminarRetoDialog
-            }
+                EliminarRetoDialog.show(requireContext(), reto.descripcion) {
+                    viewModel.eliminarReto(reto)
+                }
+            },
         )
         binding.rvRetos.layoutManager = LinearLayoutManager(requireContext())
         binding.rvRetos.adapter = adapter
@@ -62,9 +69,12 @@ class RetosFragment : Fragment() {
 
     private fun configurarFab() {
         binding.fabAgregarReto.setOnClickListener {
-            // TODO: HU 7.0 - Alan implementa AgregarRetoDialog
+            AgregarRetoDialog.show(requireContext()) { descripcion ->
+                viewModel.agregarReto(descripcion)
+            }
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
