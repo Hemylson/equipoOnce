@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.equipoonce.databinding.FragmentRetosBinding
-
+import com.example.equipoonce.ui.retos.dialogs.EditarRetoDialog
 class RetosFragment : Fragment() {
 
     private var _binding: FragmentRetosBinding? = null
@@ -44,7 +44,9 @@ class RetosFragment : Fragment() {
     private fun configurarRecyclerView() {
         adapter = RetosAdapter(
             onEdit = { reto ->
-                // TODO: HU 8.0 - Alan implementa EditarRetoDialog
+                EditarRetoDialog.show(requireContext(), reto.descripcion) { nuevaDescripcion ->
+                    viewModel.editarReto(reto.copy(descripcion = nuevaDescripcion))
+                }
             },
             onDelete = { reto ->
                 // TODO: HU 9.0 - Alan implementa EliminarRetoDialog
