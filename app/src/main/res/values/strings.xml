@@ -21,5 +21,7 @@
     <string name="btn_cerrar">Cerrar</string>
     <string name="cd_pokemon_image">Imagen del Pokémon asignado al reto</string>
 
+    <string name="cd_bottle">Botella animada pico botella</string>
+
 
 </resources>

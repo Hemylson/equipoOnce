@@ -1,6 +1,7 @@
 package com.example.equipoonce.ui.main
 
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -9,6 +10,8 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.equipoonce.R
 import com.example.equipoonce.databinding.ActivityMainBinding
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,6 +35,11 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         // TODO: agregar BottomNavigationView u otro patrón de navegación si se necesita
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finishAffinity()
+            }
+        })
     }
 
     override fun onSupportNavigateUp(): Boolean {
