@@ -1,23 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- CA-1: Fondo negro, sin toolbar -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimary">
+    android:background="#000000">
 
-    <!-- TODO: reemplazar por logo/imagen del juego y animación Lottie -->
+    <!-- CA-2: Ícono animado de botella en la parte central -->
+    <ImageView
+        android:id="@+id/ivBottle"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:src="@drawable/ic_bottle_splash"
+        android:contentDescription="@string/cd_bottle"
+        app:layout_constraintBottom_toTopOf="@id/tvPicoBotella"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:layout_marginBottom="24dp" />
+
+    <!-- CA-3: Texto naranja 'pico botella' bajo el ícono -->
     <TextView
-        android:id="@+id/tvAppName"
+        android:id="@+id/tvPicoBotella"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textColor="?attr/colorOnPrimary"
-        android:textSize="40sp"
+        android:text="pico botella"
+        android:textColor="#FFFF6D00"
+        android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/ivBottle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
