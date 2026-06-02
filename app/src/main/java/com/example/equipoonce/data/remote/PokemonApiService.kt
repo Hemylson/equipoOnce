@@ -1,11 +1,10 @@
 package com.example.equipoonce.data.remote
 
-import com.example.equipoonce.data.remote.dto.PokemonDto
+import com.example.equipoonce.data.remote.dto.PokedexResponse
 import retrofit2.http.GET
-import retrofit2.http.Path
 
 interface PokemonApiService {
-    // TODO: agregar endpoints necesarios (lista de pokémon, imagen, etc.)
-    @GET("pokemon/{name}")
-    suspend fun getPokemon(@Path("name") name: String): PokemonDto
+    // HU-12: consume el pokedex completo de Biuni para obtener imagen aleatoria
+    @GET("pokedex.json")
+    suspend fun getPokedex(): PokedexResponse
 }

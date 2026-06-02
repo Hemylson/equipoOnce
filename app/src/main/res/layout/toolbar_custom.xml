@@ -17,7 +17,6 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp">
 
-        <!-- Estrella: Calificar app (HU 4.0) -->
         <ImageButton
             android:id="@+id/btnCalificar"
             android:layout_width="0dp"
@@ -25,11 +24,10 @@
             android:layout_weight="1"
             android:minWidth="48dp"
             android:minHeight="48dp"
-            android:src="@drawable/ic_star"
+            android:src="@drawable/ic_menu_star"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/cd_calificar" />
 
-        <!-- Audio: Encender/apagar música (HU 3.0) -->
         <ImageButton
             android:id="@+id/btnAudio"
             android:layout_width="0dp"
@@ -37,11 +35,10 @@
             android:layout_weight="1"
             android:minWidth="48dp"
             android:minHeight="48dp"
-            android:src="@drawable/ic_volume_up"
+            android:src="@android:drawable/ic_lock_silent_mode_off"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/cd_audio" />
 
-        <!-- Instrucciones (HU 5.0) -->
         <ImageButton
             android:id="@+id/btnInstrucciones"
             android:layout_width="0dp"
@@ -49,11 +46,10 @@
             android:layout_weight="1"
             android:minWidth="48dp"
             android:minHeight="48dp"
-            android:src="@drawable/ic_sports_esports"
+            android:src="@android:drawable/ic_menu_info_details"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/cd_instrucciones" />
 
-        <!-- Agregar retos (HU 6.0) -->
         <ImageButton
             android:id="@+id/btnRetos"
             android:layout_width="0dp"
@@ -61,11 +57,10 @@
             android:layout_weight="1"
             android:minWidth="48dp"
             android:minHeight="48dp"
-            android:src="@drawable/ic_add_circle"
+            android:src="@android:drawable/ic_menu_add"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/cd_retos" />
 
-        <!-- Compartir (HU 10) -->
         <ImageButton
             android:id="@+id/btnCompartir"
             android:layout_width="0dp"
@@ -73,7 +68,7 @@
             android:layout_weight="1"
             android:minWidth="48dp"
             android:minHeight="48dp"
-            android:src="@drawable/ic_share"
+            android:src="@android:drawable/ic_menu_share"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/cd_compartir" />
 
