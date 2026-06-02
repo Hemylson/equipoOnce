@@ -30,16 +30,19 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // TEMPORAL - insertar retos de prueba para testear HU-12
-        lifecycleScope.launch {
-            val repo = RetoRepository(requireContext())
-            repo.insertar(RetoEntity(descripcion = "Canta una canción completa"))
-            repo.insertar(RetoEntity(descripcion = "Imita a un animal por 30 segundos"))
-            repo.insertar(RetoEntity(descripcion = "Di un trabalenguas 3 veces"))
+        // Seed solo en DEBUG y únicamente si la tabla está vacía
+        if (com.example.equipoonce.BuildConfig.DEBUG) {
+            lifecycleScope.launch {
+                val repo = RetoRepository(requireContext())
+                if (repo.obtenerTodos().isEmpty()) {
+                    repo.insertar(RetoEntity(descripcion = "Canta una canción completa"))
+                    repo.insertar(RetoEntity(descripcion = "Imita a un animal por 30 segundos"))
+                    repo.insertar(RetoEntity(descripcion = "Di un trabalenguas 3 veces"))
+                }
+            }
         }
 
-        // TEMPORAL - lanzar diálogo para probar HU-12
-        binding.root.setOnClickListener {
+        binding.btnPresioname.setOnClickListener {
             MostrarRetoDialog.newInstance()
                 .show(parentFragmentManager, MostrarRetoDialog.TAG)
         }
