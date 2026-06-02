@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_wood">
 
-    <!-- Toolbar personalizada (HU 3.0) -->
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar_custom"
@@ -16,19 +15,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Botella central (HU 2.0) -->
     <ImageView
         android:id="@+id/imgBotella"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:src="@android:drawable/ic_menu_camera"
+        android:layout_marginTop="36dp"
+        android:src="@drawable/ic_bottle"
         android:contentDescription="@string/cd_botella"
+        android:scaleType="centerInside"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toTopOf="@id/btnPresioname"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Contador regresivo (HU 2.0) -->
     <TextView
         android:id="@+id/tvContador"
         android:layout_width="wrap_content"
@@ -43,7 +42,6 @@
         app:layout_constraintStart_toStartOf="@id/imgBotella"
         app:layout_constraintEnd_toEndOf="@id/imgBotella" />
 
-    <!-- Botón parpadeante (HU 2.0) -->
     <Button
         android:id="@+id/btnPresioname"
         android:layout_width="200dp"

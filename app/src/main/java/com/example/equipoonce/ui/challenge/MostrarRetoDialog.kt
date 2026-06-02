@@ -1,14 +1,17 @@
 package com.example.equipoonce.ui.challenge
 
 import android.graphics.Color
+import android.content.DialogInterface
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -86,6 +89,11 @@ class MostrarRetoDialog : DialogFragment() {
         }
     }
 
+    override fun onDismiss(dialog: DialogInterface) {
+        setFragmentResult(RESULT_KEY, bundleOf(KEY_DIALOG_CLOSED to true))
+        super.onDismiss(dialog)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -93,6 +101,8 @@ class MostrarRetoDialog : DialogFragment() {
 
     companion object {
         const val TAG = "MostrarRetoDialog"
+        const val RESULT_KEY = "MostrarRetoDialogResult"
+        const val KEY_DIALOG_CLOSED = "closed"
         fun newInstance() = MostrarRetoDialog()
     }
 }
