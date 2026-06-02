@@ -4,15 +4,52 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@android:color/white"
+    android:padding="24dp">
 
-    <!-- Placeholder — EliminarRetoDialog usa MaterialAlertDialogBuilder sin view custom -->
-    <!-- TODO: usar este layout si se necesita mostrar preview del reto antes de eliminar -->
     <TextView
-        android:id="@+id/tvConfirmacion"
+        android:id="@+id/tvTitulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="¿Deseas eliminar este reto?"
-        android:textSize="15sp" />
+        android:text="¿Desea eliminar el siguiente reto?:"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="12dp"/>
+
+    <TextView
+        android:id="@+id/tvDescripcionReto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#4A4A4A"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NO"
+            android:textColor="#FF6B00"
+            style="?attr/borderlessButtonStyle"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnSi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SI"
+            android:textColor="#FF6B00"
+            style="?attr/borderlessButtonStyle"/>
+
+    </LinearLayout>
 
 </LinearLayout>

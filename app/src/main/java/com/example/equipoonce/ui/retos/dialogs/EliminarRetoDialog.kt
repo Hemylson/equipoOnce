@@ -1,27 +1,41 @@
 package com.example.equipoonce.ui.retos.dialogs
 
-import android.app.Dialog
-import android.os.Bundle
-import androidx.fragment.app.DialogFragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import android.app.AlertDialog
+import android.content.Context
+import android.view.LayoutInflater
+import com.example.equipoonce.databinding.DialogEliminarRetoBinding
 
-class EliminarRetoDialog : DialogFragment() {
-
-    // TODO: recibir RetoEntity como argumento via Bundle
-    // TODO: comunicar confirmación al ViewModel vía Fragment Result API
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Eliminar Reto")
-            .setMessage("¿Estás seguro de que deseas eliminar este reto?")
-            .setPositiveButton("Eliminar") { _, _ ->
-                // TODO: llamar al ViewModel para ejecutar el delete
-            }
-            .setNegativeButton("Cancelar", null)
-            .create()
-    }
-
+class EliminarRetoDialog {
     companion object {
-        const val TAG = "EliminarRetoDialog"
+        fun show(
+            context: Context,
+            descripcion: String,
+            onConfirmar: () -> Unit
+        ) {
+            val binding = DialogEliminarRetoBinding.inflate(
+                LayoutInflater.from(context)
+            )
+            val dialog = AlertDialog.Builder(context)
+                .setView(binding.root)
+                .create()
+
+            dialog.setCancelable(false)
+            dialog.window?.setBackgroundDrawableResource(
+                android.R.color.transparent
+            )
+
+            // Muestra la descripcion del reto a eliminar
+            binding.tvDescripcionReto.text = descripcion
+
+            binding.btnNo.setOnClickListener { dialog.dismiss() }
+
+            binding.btnSi.setOnClickListener {
+                onConfirmar()
+                dialog.dismiss()
+            }
+
+            dialog.show()
+        }
     }
 }
+
