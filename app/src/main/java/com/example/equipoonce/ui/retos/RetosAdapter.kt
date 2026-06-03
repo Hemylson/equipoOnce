@@ -13,6 +13,11 @@ class RetosAdapter(
     private val onDelete: (RetoEntity) -> Unit
 ) : ListAdapter<RetoEntity, RetosAdapter.RetoViewHolder>(DiffCallback()) {
 
+    companion object {
+        // Delay para que el ripple del Material Design sea visible antes de ejecutar la acción
+        private const val TOUCH_FEEDBACK_DELAY_MS = 150L
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RetoViewHolder {
         val binding = ItemRetoBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
@@ -31,10 +36,10 @@ class RetosAdapter(
         fun bind(reto: RetoEntity) {
             binding.tvDescripcionReto.text = reto.descripcion
             binding.btnEditar.setOnClickListener {
-                it.postDelayed({ onEdit(reto) }, 150)
+                it.postDelayed({ onEdit(reto) }, TOUCH_FEEDBACK_DELAY_MS)
             }
             binding.btnEliminar.setOnClickListener {
-                it.postDelayed({ onDelete(reto) }, 150)
+                it.postDelayed({ onDelete(reto) }, TOUCH_FEEDBACK_DELAY_MS)
             }
         }
     }

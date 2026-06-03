@@ -22,11 +22,7 @@ class RetosFragment : Fragment() {
     private val viewModel: RetosViewModel by viewModels()
     private lateinit var adapter: RetosAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentRetosBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -64,16 +60,26 @@ class RetosFragment : Fragment() {
     }
 
     private fun observarViewModel() {
-        viewModel.lista.observe(viewLifecycleOwner) { lista ->
-            adapter.submitList(lista)
-            binding.tvEmpty.visibility = if (lista.isEmpty()) View.VISIBLE else View.GONE
-            binding.rvRetos.visibility = if (lista.isEmpty()) View.GONE else View.VISIBLE
-        }
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            binding.progressBar.visibility = View.GONE
+            binding.tvEmpty.visibility = View.GONE
+            binding.rvRetos.visibility = View.GONE
 
-        viewModel.error.observe(viewLifecycleOwner) { mensaje ->
-            if (mensaje != null) {
-                Toast.makeText(requireContext(), mensaje, Toast.LENGTH_SHORT).show()
-                viewModel.onErrorConsumed()
+            when (state) {
+                is RetosUiState.Loading -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+                is RetosUiState.Success -> {
+                    binding.rvRetos.visibility = View.VISIBLE
+                    adapter.submitList(state.retos)
+                }
+                is RetosUiState.Empty -> {
+                    binding.tvEmpty.visibility = View.VISIBLE
+                }
+                is RetosUiState.Error -> {
+                    binding.tvEmpty.visibility = View.VISIBLE
+                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
