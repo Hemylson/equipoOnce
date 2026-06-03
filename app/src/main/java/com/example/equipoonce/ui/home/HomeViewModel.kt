@@ -132,7 +132,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun clearSpinEvent() { _spinEvent.value = null }
+    fun onSpinEventConsumed() { _spinEvent.value = null }
 
     fun onDialogShown() { _showDialog.value = false }
 

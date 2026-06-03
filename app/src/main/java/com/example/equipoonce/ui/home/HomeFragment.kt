@@ -184,7 +184,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         viewModel.spinEvent.observe(viewLifecycleOwner) { params ->
             if (params != null && isAdded && !parentFragmentManager.isStateSaved) {
                 playBottleSpin(params)
-                viewModel.clearSpinEvent()
+                viewModel.onSpinEventConsumed()
             }
         }
 
