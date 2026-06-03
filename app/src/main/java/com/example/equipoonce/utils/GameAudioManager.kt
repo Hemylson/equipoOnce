@@ -1,64 +1,87 @@
 package com.example.equipoonce.utils
 
 import android.content.Context
+import android.media.AudioManager
 import android.media.MediaPlayer
 import com.example.equipoonce.R
 
 class GameAudioManager(private val context: Context) {
 
+    private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private var backgroundPlayer: MediaPlayer? = null
     private var spinPlayer: MediaPlayer? = null
 
+    private fun requestAudioFocus() {
+        @Suppress("DEPRECATION")
+        audioManager.requestAudioFocus(
+            null,
+            AudioManager.STREAM_MUSIC,
+            AudioManager.AUDIOFOCUS_GAIN
+        )
+    }
+
     fun playBackground() {
         if (backgroundPlayer == null) {
-            backgroundPlayer = MediaPlayer.create(context, R.raw.background_music).apply {
+            requestAudioFocus()
+            backgroundPlayer = MediaPlayer.create(context, R.raw.background_music)?.apply {
                 isLooping = true
-                setVolume(0.6f, 0.6f)
+                setVolume(1.0f, 1.0f)
                 start()
             }
         } else if (backgroundPlayer?.isPlaying == false) {
-            backgroundPlayer?.start()
+            runCatching { backgroundPlayer?.start() }
         }
     }
 
     fun pauseBackground() {
-        if (backgroundPlayer?.isPlaying == true) {
-            backgroundPlayer?.pause()
+        runCatching {
+            if (backgroundPlayer?.isPlaying == true) {
+                backgroundPlayer?.pause()
+            }
         }
     }
 
     fun resumeBackground() {
-        if (backgroundPlayer?.isPlaying == false) {
-            backgroundPlayer?.start()
+        runCatching {
+            if (backgroundPlayer?.isPlaying == false) {
+                backgroundPlayer?.start()
+            }
         }
     }
 
     fun playSpinSound() {
         if (spinPlayer == null) {
-            spinPlayer = MediaPlayer.create(context, R.raw.spin_sound).apply {
+            spinPlayer = MediaPlayer.create(context, R.raw.spin_sound)?.apply {
                 isLooping = true
-                setVolume(0.8f, 0.8f)
+                setVolume(1.0f, 1.0f)
                 start()
             }
         } else if (spinPlayer?.isPlaying == false) {
-            spinPlayer?.start()
+            runCatching { spinPlayer?.start() }
         }
     }
 
     fun stopSpinSound() {
-        spinPlayer?.stop()
-        spinPlayer?.release()
+        runCatching { spinPlayer?.pause() }
+        releasePlayer(spinPlayer)
         spinPlayer = null
     }
 
-    fun isBackgroundPlaying(): Boolean {
-        return backgroundPlayer?.isPlaying == true
-    }
+    fun isBackgroundPlaying(): Boolean =
+        runCatching { backgroundPlayer?.isPlaying == true }.getOrDefault(false)
 
     fun stopAllSounds() {
-        stopSpinSound()
-        backgroundPlayer?.stop()
-        backgroundPlayer?.release()
+        releasePlayer(spinPlayer)
+        spinPlayer = null
+        releasePlayer(backgroundPlayer)
         backgroundPlayer = null
+    }
+
+    private fun releasePlayer(player: MediaPlayer?) {
+        player ?: return
+        runCatching {
+            if (player.isPlaying) player.stop()
+            player.release()
+        }
     }
 }

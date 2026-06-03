@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        appBarConfiguration = AppBarConfiguration(setOf(R.id.startFragment))
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment))
 
         // TODO: agregar BottomNavigationView u otro patrón de navegación si se necesita
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {

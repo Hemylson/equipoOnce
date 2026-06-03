@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Truco del botón flotante (CA-4):
-    El FrameLayout raíz tiene paddingBottom = mitad del alto del botón (28dp = 56dp/2).
-    El botón usa translationY="28dp" para sobresalir hacia abajo del diálogo.
+    Estructura correcta:
+    - CardView tiene marginTop=60dp para dejar espacio al círculo encima
+    - Círculo en layout_gravity="top|center_horizontal" sin translationY, se superpone al card
+    - Botón usa paddingBottom + translationY para sobresalir abajo
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="28dp"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
     android:clipChildren="false"
     android:clipToPadding="false">
 
-    <!-- Tarjeta con fondo degradado (CA-1) -->
+    <!-- Tarjeta con fondo degradado negro, baja 60dp para que el círculo quede encima -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="0dp"
         app:cardBackgroundColor="@android:color/transparent">
@@ -25,44 +29,23 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@drawable/bg_dialog_reto"
-            android:paddingTop="32dp"
-            android:paddingBottom="40dp"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp"
+            android:paddingTop="68dp"
+            android:paddingBottom="44dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
             android:gravity="center_horizontal">
 
-            <!-- CA-2: Círculo con borde blanco y fondo negro para el Pokémon -->
-            <FrameLayout
-                android:layout_width="110dp"
-                android:layout_height="110dp"
-                android:layout_marginBottom="24dp">
+            <!-- Línea divisora naranja -->
+            <View
+                android:id="@+id/divider"
+                android:layout_width="48dp"
+                android:layout_height="2dp"
+                android:background="#FF6B00"
+                android:alpha="0.7"
+                android:visibility="gone"
+                android:layout_marginBottom="16dp"/>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_circle_pokemon_border" />
-
-                <ImageView
-                    android:id="@+id/imgPokemon"
-                    android:layout_width="94dp"
-                    android:layout_height="94dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/cd_pokemon_image"
-                    android:scaleType="centerCrop"
-                    android:visibility="gone" />
-
-            </FrameLayout>
-
-            <!-- ProgressBar de carga -->
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:indeterminateTint="@android:color/white"
-                android:visibility="gone" />
-
-            <!-- CA-3: Texto blanco bold con el reto aleatorio -->
+            <!-- Texto del reto -->
             <TextView
                 android:id="@+id/tvReto"
                 android:layout_width="match_parent"
@@ -70,14 +53,44 @@
                 android:gravity="center"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"
-                android:textSize="18sp"
-                android:lineSpacingMultiplier="1.3"
-                android:visibility="gone" />
+                android:textSize="17sp"
+                android:lineSpacingMultiplier="1.4"
+                android:visibility="gone"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- CA-4: Botón naranja Cerrar, mitad dentro / mitad fuera del diálogo -->
+    <!-- Círculo pokemon: se superpone al borde superior del card (layout_gravity top) -->
+    <FrameLayout
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="top|center_horizontal">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_circle_pokemon_border"/>
+
+        <ImageView
+            android:id="@+id/imgPokemon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/cd_pokemon_image"
+            android:scaleType="centerCrop"
+            android:visibility="gone"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:indeterminateTint="@android:color/white"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+    <!-- Botón Cerrar: mitad dentro / mitad fuera del borde inferior -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCerrar"
         android:layout_width="140dp"
@@ -90,6 +103,6 @@
         android:textSize="16sp"
         app:backgroundTint="@color/orange_cerrar"
         app:cornerRadius="28dp"
-        app:elevation="8dp" />
+        app:elevation="8dp"/>
 
 </FrameLayout>

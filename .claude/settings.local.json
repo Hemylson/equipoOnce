@@ -20,7 +20,15 @@
       "Bash(curl *)",
       "Bash(python jira_update.py)",
       "Bash(python -c ' *)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\lina2\\\\AndroidStudioProjects\\\\equipoOnce\" -Recurse -Filter \"*.kt\")",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(cat)",
+      "Read(//tmp/**)",
+      "Bash(xxd background_music.wav)",
+      "Bash(xxd spin_sound.wav)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\lina2\\\\AndroidStudioProjects\\\\equipoOnce\" -Recurse -Directory)",
+      "Bash(Select-Object FullName)"
     ]
   }
 }

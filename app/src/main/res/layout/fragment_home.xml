@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="@drawable/bg_wood">
 
     <include
@@ -11,18 +12,24 @@
         layout="@layout/toolbar_custom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/toolbar_margin_top"
+        android:layout_marginStart="@dimen/toolbar_margin_horizontal"
+        android:layout_marginEnd="@dimen/toolbar_margin_horizontal"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
         android:id="@+id/imgBotella"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_marginTop="36dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
         android:src="@drawable/ic_bottle"
         android:contentDescription="@string/cd_botella"
-        android:scaleType="centerInside"
+        android:scaleType="fitCenter"
+        app:layout_constraintWidth_percent="0.4"
+        app:layout_constraintDimensionRatio="1:2"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toTopOf="@id/btnPresioname"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,24 +41,55 @@
         android:layout_height="wrap_content"
         android:text="@string/contador_inicial"
         android:textColor="#FF6B00"
-        android:textSize="48sp"
+        android:textSize="64sp"
         android:textStyle="bold"
+        android:shadowColor="#FF000000"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="12"
         android:visibility="invisible"
         app:layout_constraintTop_toTopOf="@id/imgBotella"
         app:layout_constraintBottom_toBottomOf="@id/imgBotella"
         app:layout_constraintStart_toStartOf="@id/imgBotella"
         app:layout_constraintEnd_toEndOf="@id/imgBotella" />
 
-    <Button
+    <!-- Contenedor botón circular + texto debajo -->
+    <LinearLayout
         android:id="@+id/btnPresioname"
-        android:layout_width="200dp"
-        android:layout_height="60dp"
-        android:text="@string/btn_presioname"
-        android:textColor="@android:color/white"
-        android:backgroundTint="#FF6B00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginBottom="36dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="48dp" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Círculo naranja refinado (solo este parpadea) -->
+        <View
+            android:id="@+id/circlePresioname"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:background="@drawable/bg_btn_presioname"/>
+
+        <!-- Texto debajo -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_presioname"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.08"
+            android:layout_marginTop="14dp"
+            android:shadowColor="#55FFFFFF"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="2"/>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

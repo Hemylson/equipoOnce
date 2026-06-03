@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
@@ -35,6 +34,14 @@ class MostrarRetoDialog : DialogFragment() {
         return binding.root
     }
 
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(
+            (resources.displayMetrics.widthPixels * DIALOG_WIDTH_PERCENT).toInt(),
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -48,7 +55,6 @@ class MostrarRetoDialog : DialogFragment() {
         binding.btnCerrar.setOnClickListener { dismiss() }
 
         observarEstado()
-        viewModel.cargarRetoYPokemon()
     }
 
     private fun observarEstado() {
@@ -62,18 +68,25 @@ class MostrarRetoDialog : DialogFragment() {
                             binding.imgPokemon.visibility = View.GONE
                         }
                         is ChallengeUiState.Success -> {
-                            binding.progressBar.visibility = View.GONE
                             binding.tvReto.visibility = View.VISIBLE
-                            binding.imgPokemon.visibility = View.VISIBLE
-
+                            binding.divider.visibility = View.VISIBLE
                             binding.tvReto.text = state.reto.descripcion
 
-                            // CA-2: img es la URL directa del campo "img" del JSON de Biuni
+                            // Carga imagen: progressBar se mantiene hasta que Coil termine
                             binding.imgPokemon.load(state.pokemon?.img) {
-                                crossfade(true)
+                                crossfade(false)
                                 transformations(CircleCropTransformation())
-                                placeholder(R.drawable.ic_pokemon_placeholder)
                                 error(R.drawable.ic_pokemon_placeholder)
+                                listener(
+                                    onSuccess = { _, _ ->
+                                        binding.progressBar.visibility = View.GONE
+                                        binding.imgPokemon.visibility = View.VISIBLE
+                                    },
+                                    onError = { _, _ ->
+                                        binding.progressBar.visibility = View.GONE
+                                        binding.imgPokemon.visibility = View.VISIBLE
+                                    }
+                                )
                             }
                         }
                         is ChallengeUiState.Error -> {
@@ -103,6 +116,7 @@ class MostrarRetoDialog : DialogFragment() {
         const val TAG = "MostrarRetoDialog"
         const val RESULT_KEY = "MostrarRetoDialogResult"
         const val KEY_DIALOG_CLOSED = "closed"
+        private const val DIALOG_WIDTH_PERCENT = 0.90
         fun newInstance() = MostrarRetoDialog()
     }
 }

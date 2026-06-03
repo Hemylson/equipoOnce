@@ -29,19 +29,23 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
     fun cargarRetoYPokemon() {
         viewModelScope.launch {
             _uiState.value = ChallengeUiState.Loading
-
-            // Reto aleatorio desde SQLite
-            val todos = retoRepository.obtenerTodos()
-            val reto = todos.randomOrNull()
-            if (reto == null) {
-                _uiState.value = ChallengeUiState.Error("No hay retos disponibles. Agrega retos primero.")
-                return@launch
+            try {
+                val reto = obtenerRetoAleatorio()
+                if (reto == null) {
+                    _uiState.value = ChallengeUiState.Error("No hay retos disponibles. Agrega retos primero.")
+                    return@launch
+                }
+                val pokemon = obtenerPokemonAleatorio()
+                _uiState.value = ChallengeUiState.Success(reto, pokemon)
+            } catch (e: Exception) {
+                _uiState.value = ChallengeUiState.Error("Error inesperado. Intenta de nuevo.")
             }
-
-            // Pokémon aleatorio desde Biuni (falla silenciosamente si no hay red)
-            val pokemon = pokemonRepository.getPokemonAleatorio()
-
-            _uiState.value = ChallengeUiState.Success(reto, pokemon)
         }
     }
+
+    private suspend fun obtenerRetoAleatorio(): RetoEntity? =
+        retoRepository.obtenerTodos().randomOrNull()
+
+    private suspend fun obtenerPokemonAleatorio(): PokemonDto? =
+        pokemonRepository.getPokemonAleatorio()
 }

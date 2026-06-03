@@ -3,44 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/startFragment">
-
-    <fragment
-        android:id="@+id/startFragment"
-        android:name="com.example.equipoonce.ui.start.StartFragment"
-        android:label="Bienvenido"
-        tools:layout="@layout/fragment_start">
-
-        <action
-            android:id="@+id/action_start_to_home"
-            app:destination="@id/homeFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
-
-        <action
-            android:id="@+id/action_start_to_instructions"
-            app:destination="@id/instructionsFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
-
-        <action
-            android:id="@+id/action_start_to_retos"
-            app:destination="@id/retosFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
-    </fragment>
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.equipoonce.ui.home.HomeFragment"
         android:label="Inicio"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_home_to_retos"
+            app:destination="@id/retosFragment"
+            app:enterAnim="@anim/fade_scale_in"
+            app:exitAnim="@anim/fade_scale_out"
+            app:popEnterAnim="@anim/fade_in_pop"
+            app:popExitAnim="@anim/fade_scale_out" />
+
+        <action
+            android:id="@+id/action_home_to_instructions"
+            app:destination="@id/instructionsFragment"
+            app:enterAnim="@anim/fade_scale_in"
+            app:exitAnim="@anim/fade_scale_out"
+            app:popEnterAnim="@anim/fade_in_pop"
+            app:popExitAnim="@anim/fade_scale_out" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/retosFragment"
@@ -53,7 +40,5 @@
         android:name="com.example.equipoonce.ui.instructions.InstructionsFragment"
         android:label="Instrucciones"
         tools:layout="@layout/fragment_instructions" />
-
-    <!-- TODO: agregar destino para la pantalla de juego activo cuando se implemente -->
 
 </navigation>
