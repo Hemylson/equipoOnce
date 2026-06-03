@@ -24,22 +24,34 @@ import coil.imageLoader
 import coil.request.ImageRequest
 import com.example.equipoonce.R
 import com.example.equipoonce.ui.challenge.ChallengeUiState
-import com.example.equipoonce.utils.Constants
+import com.example.equipoonce.di.ChallengeViewModelFactory
+import com.example.equipoonce.di.RepositoryProvider
+import com.example.equipoonce.di.SharedAudioViewModelFactory
 import com.example.equipoonce.ui.challenge.ChallengeViewModel
 import com.example.equipoonce.ui.challenge.MostrarRetoDialog
+import com.example.equipoonce.ui.shared.SharedAudioViewModel
+import com.example.equipoonce.utils.Constants
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private val viewModel: HomeViewModel by viewModels()
-    private val challengeViewModel: ChallengeViewModel by activityViewModels()
+    private val audioViewModel: SharedAudioViewModel by activityViewModels {
+        SharedAudioViewModelFactory(RepositoryProvider.provideAudioManager())
+    }
+    private val challengeViewModel: ChallengeViewModel by activityViewModels {
+        ChallengeViewModelFactory(
+            RepositoryProvider.provideRetoRepository(),
+            RepositoryProvider.providePokemonRepository()
+        )
+    }
 
     private lateinit var btnPresioname: View
     private lateinit var circlePresioname: View
     private lateinit var tvContador: TextView
     private lateinit var imgBotella: ImageView
     private lateinit var btnAudio: ImageButton
-    private var isViewJustCreated = false
+    private var currentBottleAnimator: ObjectAnimator? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,8 +61,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         tvContador = view.findViewById(R.id.tvContador)
         imgBotella = view.findViewById(R.id.imgBotella)
 
-        isViewJustCreated = true
-        viewModel.startBackground()
+        audioViewModel.startBackground()
         configurarToolbar(view)
         configurarBoton()
         configurarDialogResultListener()
@@ -60,20 +71,20 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onResume() {
         super.onResume()
-        if (!isViewJustCreated) {
-            viewModel.onFragmentResume()
-        }
-        isViewJustCreated = false
+        audioViewModel.resumeIfNeeded()
     }
 
     override fun onPause() {
         super.onPause()
-        viewModel.onFragmentPause()
+        audioViewModel.pauseBackground()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.onFragmentDestroy()
+        circlePresioname.clearAnimation()
+        currentBottleAnimator?.cancel()
+        currentBottleAnimator = null
+        audioViewModel.pauseForNavigation()
     }
 
     // ── Toolbar ────────────────────────────────────────────────────────────
@@ -81,8 +92,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun configurarToolbar(view: View) {
         view.findViewById<ImageButton>(R.id.btnCalificar).setOnClickListener {
             animarBoton(it)
-            val uri = Uri.parse(Constants.PLAY_STORE_URL)
-            startActivity(Intent(Intent.ACTION_VIEW, uri))
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Constants.PLAY_STORE_URL)))
         }
 
         view.findViewById<ImageButton>(R.id.btnCompartir).setOnClickListener {
@@ -98,7 +108,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         btnAudio = view.findViewById(R.id.btnAudio)
         btnAudio.setOnClickListener {
             animarBoton(it)
-            viewModel.toggleAudio()
+            audioViewModel.toggleAudio()
         }
 
         view.findViewById<ImageButton>(R.id.btnRetos).setOnClickListener {
@@ -113,23 +123,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun animarBoton(view: View) {
-        val anim = AlphaAnimation(1f, 0.3f).apply {
+        AlphaAnimation(1f, 0.3f).apply {
             duration = 150
             repeatMode = AlphaAnimation.REVERSE
             repeatCount = 1
-        }
-        view.startAnimation(anim)
+        }.also { view.startAnimation(it) }
     }
 
     // ── Botón presióname ───────────────────────────────────────────────────
 
     private fun iniciarAnimacionBoton() {
-        val anim = AlphaAnimation(0.3f, 1f).apply {
+        AlphaAnimation(0.3f, 1f).apply {
             duration = 700
             repeatMode = AlphaAnimation.REVERSE
             repeatCount = AlphaAnimation.INFINITE
-        }
-        circlePresioname.startAnimation(anim)
+        }.also { circlePresioname.startAnimation(it) }
     }
 
     private fun configurarBoton() {
@@ -146,6 +154,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         setFragmentResultListener(MostrarRetoDialog.RESULT_KEY) { _, bundle ->
             if (bundle.getBoolean(MostrarRetoDialog.KEY_DIALOG_CLOSED, false)) {
                 viewModel.onDialogClosed()
+                audioViewModel.onSpinDialogClosed()
             }
         }
     }
@@ -153,48 +162,64 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     // ── Observadores ───────────────────────────────────────────────────────
 
     private fun observarViewModel() {
-        viewModel.contador.observe(viewLifecycleOwner) { valor ->
-            if (valor != null) {
-                tvContador.visibility = View.VISIBLE
-                tvContador.text = valor.toString()
-            } else {
-                tvContador.visibility = View.INVISIBLE
-            }
-        }
-
-        viewModel.isButtonVisible.observe(viewLifecycleOwner) { visible ->
-            if (visible) {
-                btnPresioname.visibility = View.VISIBLE
-                btnPresioname.isEnabled = true
-                iniciarAnimacionBoton()
-            } else {
-                circlePresioname.clearAnimation()
-                circlePresioname.alpha = 1f
-                btnPresioname.visibility = View.INVISIBLE
-                btnPresioname.isEnabled = false
-            }
-        }
-
-        viewModel.isAudioOn.observe(viewLifecycleOwner) { audioOn ->
-            btnAudio.setImageResource(
-                if (audioOn) R.drawable.ic_volume_up else R.drawable.ic_volume_off
-            )
-        }
-
-        viewModel.spinEvent.observe(viewLifecycleOwner) { params ->
-            if (params != null && isAdded && !parentFragmentManager.isStateSaved) {
-                playBottleSpin(params)
-                viewModel.onSpinEventConsumed()
-            }
-        }
-
-        viewModel.showDialog.observe(viewLifecycleOwner) { shouldShow ->
-            if (shouldShow && isAdded && !parentFragmentManager.isStateSaved) {
-                val yaExiste = parentFragmentManager.findFragmentByTag(MostrarRetoDialog.TAG)
-                if (yaExiste == null) {
-                    MostrarRetoDialog.newInstance().show(parentFragmentManager, MostrarRetoDialog.TAG)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.contador.collect { valor ->
+                    tvContador.visibility = if (valor != null) View.VISIBLE else View.INVISIBLE
+                    tvContador.text = valor?.toString() ?: ""
                 }
-                viewModel.onDialogShown()
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isButtonVisible.collect { visible ->
+                    if (visible) {
+                        btnPresioname.visibility = View.VISIBLE
+                        btnPresioname.isEnabled = true
+                        iniciarAnimacionBoton()
+                    } else {
+                        circlePresioname.clearAnimation()
+                        circlePresioname.alpha = 1f
+                        btnPresioname.visibility = View.INVISIBLE
+                        btnPresioname.isEnabled = false
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                audioViewModel.isAudioOn.collect { audioOn ->
+                    btnAudio.setImageResource(
+                        if (audioOn) R.drawable.ic_volume_up else R.drawable.ic_volume_off
+                    )
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.spinEvent.collect { params ->
+                    if (params != null && isAdded && !parentFragmentManager.isStateSaved) {
+                        playBottleSpin(params)
+                        viewModel.onSpinEventConsumed()
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.showDialog.collect { shouldShow ->
+                    if (shouldShow && isAdded && !parentFragmentManager.isStateSaved) {
+                        val yaExiste = parentFragmentManager.findFragmentByTag(MostrarRetoDialog.TAG)
+                        if (yaExiste == null) {
+                            MostrarRetoDialog.newInstance().show(parentFragmentManager, MostrarRetoDialog.TAG)
+                        }
+                        viewModel.onDialogShown()
+                    }
+                }
             }
         }
     }
@@ -202,19 +227,24 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     // ── Animación botella ──────────────────────────────────────────────────
 
     private fun playBottleSpin(params: SpinParams) {
-        val animator = ObjectAnimator.ofFloat(imgBotella, View.ROTATION, imgBotella.rotation, params.targetAngle)
-        animator.duration = params.durationMs
-        animator.interpolator = DecelerateInterpolator(1.8f)
-        animator.doOnStart {
-            imgBotella.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-            viewModel.onSpinStart()
+        currentBottleAnimator?.cancel()
+        currentBottleAnimator = ObjectAnimator.ofFloat(
+            imgBotella, View.ROTATION, imgBotella.rotation, params.targetAngle
+        ).apply {
+            duration = params.durationMs
+            interpolator = DecelerateInterpolator(1.8f)
+            doOnStart {
+                imgBotella.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+                audioViewModel.onSpinStart()
+            }
+            doOnEnd {
+                audioViewModel.onSpinEnd()
+                imgBotella.rotation = imgBotella.rotation % 360f
+                imgBotella.setLayerType(View.LAYER_TYPE_NONE, null)
+                currentBottleAnimator = null
+            }
+            start()
         }
-        animator.doOnEnd {
-            viewModel.onSpinEnd()
-            imgBotella.rotation = imgBotella.rotation % 360f
-            imgBotella.setLayerType(View.LAYER_TYPE_NONE, null)
-        }
-        animator.start()
     }
 
     // ── Precarga imagen pokemon ────────────────────────────────────────────
@@ -225,9 +255,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 challengeViewModel.uiState.collect { state ->
                     if (state is ChallengeUiState.Success) {
                         state.pokemon?.img?.let { url ->
-                            val request = ImageRequest.Builder(requireContext())
-                                .data(url)
-                                .build()
+                            val request = ImageRequest.Builder(requireContext()).data(url).build()
                             requireContext().imageLoader.enqueue(request)
                         }
                     }

@@ -3,6 +3,7 @@ package com.example.equipoonce.utils
 import android.content.Context
 import android.media.AudioManager
 import android.media.MediaPlayer
+import timber.log.Timber
 import com.example.equipoonce.R
 
 class GameAudioManager(private val context: Context) {
@@ -27,9 +28,13 @@ class GameAudioManager(private val context: Context) {
                 isLooping = true
                 setVolume(1.0f, 1.0f)
                 start()
+            } ?: run {
+                Timber.e("Error: no se pudo crear el reproductor de música de fondo")
+                null
             }
         } else if (backgroundPlayer?.isPlaying == false) {
             runCatching { backgroundPlayer?.start() }
+                .onFailure { Timber.e(it, "Error al reanudar música de fondo") }
         }
     }
 

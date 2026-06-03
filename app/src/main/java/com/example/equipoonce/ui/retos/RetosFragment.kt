@@ -7,9 +7,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.launch
 import com.example.equipoonce.databinding.FragmentRetosBinding
+import com.example.equipoonce.di.RepositoryProvider
+import com.example.equipoonce.di.RetosViewModelFactory
 import com.example.equipoonce.ui.retos.dialogs.AgregarRetoDialog
 import com.example.equipoonce.ui.retos.dialogs.EditarRetoDialog
 import com.example.equipoonce.ui.retos.dialogs.EliminarRetoDialog
@@ -19,7 +25,9 @@ class RetosFragment : Fragment() {
     private var _binding: FragmentRetosBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: RetosViewModel by viewModels()
+    private val viewModel: RetosViewModel by viewModels {
+        RetosViewModelFactory(RepositoryProvider.provideRetoRepository())
+    }
     private lateinit var adapter: RetosAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -45,8 +53,9 @@ class RetosFragment : Fragment() {
     private fun configurarRecyclerView() {
         adapter = RetosAdapter(
             onEdit = { reto ->
+                // El Fragment pasa datos crudos — el ViewModel decide cómo transformarlos
                 EditarRetoDialog.show(requireContext(), reto.descripcion) { nuevaDescripcion ->
-                    viewModel.editarReto(reto.copy(descripcion = nuevaDescripcion))
+                    viewModel.editarReto(reto.id, nuevaDescripcion)
                 }
             },
             onDelete = { reto ->
@@ -60,25 +69,29 @@ class RetosFragment : Fragment() {
     }
 
     private fun observarViewModel() {
-        viewModel.uiState.observe(viewLifecycleOwner) { state ->
-            binding.progressBar.visibility = View.GONE
-            binding.tvEmpty.visibility = View.GONE
-            binding.rvRetos.visibility = View.GONE
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    binding.progressBar.visibility = View.GONE
+                    binding.tvEmpty.visibility = View.GONE
+                    binding.rvRetos.visibility = View.GONE
 
-            when (state) {
-                is RetosUiState.Loading -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                }
-                is RetosUiState.Success -> {
-                    binding.rvRetos.visibility = View.VISIBLE
-                    adapter.submitList(state.retos)
-                }
-                is RetosUiState.Empty -> {
-                    binding.tvEmpty.visibility = View.VISIBLE
-                }
-                is RetosUiState.Error -> {
-                    binding.tvEmpty.visibility = View.VISIBLE
-                    Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                    when (state) {
+                        is RetosUiState.Loading -> {
+                            binding.progressBar.visibility = View.VISIBLE
+                        }
+                        is RetosUiState.Success -> {
+                            binding.rvRetos.visibility = View.VISIBLE
+                            adapter.submitList(state.retos)
+                        }
+                        is RetosUiState.Empty -> {
+                            binding.tvEmpty.visibility = View.VISIBLE
+                        }
+                        is RetosUiState.Error -> {
+                            binding.tvEmpty.visibility = View.VISIBLE
+                            Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         }

@@ -35,11 +35,19 @@ class RetosAdapter(
 
         fun bind(reto: RetoEntity) {
             binding.tvDescripcionReto.text = reto.descripcion
-            binding.btnEditar.setOnClickListener {
-                it.postDelayed({ onEdit(reto) }, TOUCH_FEEDBACK_DELAY_MS)
+            binding.btnEditar.setOnClickListener { view ->
+                view.isEnabled = false
+                view.postDelayed({
+                    if (view.isAttachedToWindow) onEdit(reto)
+                    view.isEnabled = true
+                }, TOUCH_FEEDBACK_DELAY_MS)
             }
-            binding.btnEliminar.setOnClickListener {
-                it.postDelayed({ onDelete(reto) }, TOUCH_FEEDBACK_DELAY_MS)
+            binding.btnEliminar.setOnClickListener { view ->
+                view.isEnabled = false
+                view.postDelayed({
+                    if (view.isAttachedToWindow) onDelete(reto)
+                    view.isEnabled = true
+                }, TOUCH_FEEDBACK_DELAY_MS)
             }
         }
     }

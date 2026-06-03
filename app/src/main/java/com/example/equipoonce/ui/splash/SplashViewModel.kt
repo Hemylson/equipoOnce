@@ -1,17 +1,17 @@
 package com.example.equipoonce.ui.splash
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.equipoonce.utils.Constants
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class SplashViewModel : ViewModel() {
 
-    private val _navegarAlHome = MutableLiveData(false)
-    val navegarAlHome: LiveData<Boolean> = _navegarAlHome
+    private val _navegarAlHome = MutableStateFlow(false)
+    val navegarAlHome: StateFlow<Boolean> = _navegarAlHome
 
     init {
         viewModelScope.launch {

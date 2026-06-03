@@ -6,9 +6,13 @@ import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.equipoonce.R
 import com.example.equipoonce.databinding.ActivitySplashBinding
 import com.example.equipoonce.ui.main.MainActivity
+import kotlinx.coroutines.launch
 
 class SplashActivity : AppCompatActivity() {
 
@@ -31,10 +35,16 @@ class SplashActivity : AppCompatActivity() {
         binding.ivBottle.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_bottle_bounce))
         binding.tvPicoBotella.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_fade_in))
 
-        viewModel.navegarAlHome.observe(this) { shouldNavigate ->
-            if (shouldNavigate) {
-                viewModel.onNavegado()
-                navigateToMain()
+        // lifecycleScope + repeatOnLifecycle garantiza que el observer se cancela
+        // automáticamente si la Activity se destruye antes del delay
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navegarAlHome.collect { shouldNavigate ->
+                    if (shouldNavigate) {
+                        viewModel.onNavegado()
+                        navigateToMain()
+                    }
+                }
             }
         }
     }

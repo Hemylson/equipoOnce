@@ -34,6 +34,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
     kotlinOptions {
         jvmTarget = "11"
@@ -66,6 +67,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.8.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0")
     implementation("com.airbnb.android:lottie:6.4.0")
+    implementation("com.jakewharton.timber:timber:5.0.1")
 
 
 }

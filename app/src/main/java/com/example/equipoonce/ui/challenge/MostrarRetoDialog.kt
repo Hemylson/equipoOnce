@@ -18,14 +18,22 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.equipoonce.R
 import com.example.equipoonce.databinding.DialogMostrarRetoBinding
+import com.example.equipoonce.di.ChallengeViewModelFactory
+import com.example.equipoonce.di.RepositoryProvider
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class MostrarRetoDialog : DialogFragment() {
 
     private var _binding: DialogMostrarRetoBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: ChallengeViewModel by activityViewModels()
+    private val viewModel: ChallengeViewModel by activityViewModels {
+        ChallengeViewModelFactory(
+            RepositoryProvider.provideRetoRepository(),
+            RepositoryProvider.providePokemonRepository()
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -82,7 +90,8 @@ class MostrarRetoDialog : DialogFragment() {
                                         binding.progressBar.visibility = View.GONE
                                         binding.imgPokemon.visibility = View.VISIBLE
                                     },
-                                    onError = { _, _ ->
+                                    onError = { _, result ->
+                                        Timber.e("Error al cargar imagen del Pokémon: ${result.throwable?.message}")
                                         binding.progressBar.visibility = View.GONE
                                         binding.imgPokemon.visibility = View.VISIBLE
                                     }

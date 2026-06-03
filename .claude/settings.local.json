@@ -28,7 +28,11 @@
       "Bash(xxd background_music.wav)",
       "Bash(xxd spin_sound.wav)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\lina2\\\\AndroidStudioProjects\\\\equipoOnce\" -Recurse -Directory)",
-      "Bash(Select-Object FullName)"
+      "Bash(Select-Object FullName)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\lina2\\\\AndroidStudioProjects\\\\equipoOnce\" -Recurse -Include \"SplashActivity.kt\")",
+      "Bash(Select-Object -First 5)",
+      "PowerShell(head *)",
+      "Bash(Get-ChildItem C:\\\\Users\\\\lina2\\\\AndroidStudioProjects\\\\equipoOnce *)"
     ]
   }
 }

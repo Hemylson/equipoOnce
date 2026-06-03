@@ -1,13 +1,12 @@
 package com.example.equipoonce.ui.home
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.equipoonce.utils.GameAudioManager
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import kotlin.random.Random
 
 data class SpinParams(val targetAngle: Float, val durationMs: Long) {
@@ -17,7 +16,12 @@ data class SpinParams(val targetAngle: Float, val durationMs: Long) {
     }
 }
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
+/**
+ * ViewModel del Home. Responsabilidad única: lógica del giro de botella.
+ * ViewModel puro — sin referencias a Android, completamente testeable.
+ * Usa StateFlow exclusivamente para homogeneidad reactiva.
+ */
+class HomeViewModel : ViewModel() {
 
     companion object {
         private const val MIN_SPIN_DURATION_MS = 4000L
@@ -28,84 +32,27 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         private const val COUNTDOWN_START = 3
     }
 
-    private val audioManager = GameAudioManager(application)
+    private val _contador = MutableStateFlow<Int?>(null)
+    val contador: StateFlow<Int?> = _contador
 
-    private val _contador = MutableLiveData<Int?>(null)
-    val contador: LiveData<Int?> = _contador
+    private val _isButtonVisible = MutableStateFlow(true)
+    val isButtonVisible: StateFlow<Boolean> = _isButtonVisible
 
-    private val _isButtonVisible = MutableLiveData(true)
-    val isButtonVisible: LiveData<Boolean> = _isButtonVisible
+    private val _spinEvent = MutableStateFlow<SpinParams?>(null)
+    val spinEvent: StateFlow<SpinParams?> = _spinEvent
 
-    private val _spinEvent = MutableLiveData<SpinParams?>(null)
-    val spinEvent: LiveData<SpinParams?> = _spinEvent
+    private val _showDialog = MutableStateFlow(false)
+    val showDialog: StateFlow<Boolean> = _showDialog
 
-    private val _showDialog = MutableLiveData(false)
-    val showDialog: LiveData<Boolean> = _showDialog
-
-    private val _isAudioOn = MutableLiveData(true)
-    val isAudioOn: LiveData<Boolean> = _isAudioOn
-
-    private var counting = false
+    // StateFlow para consistencia total con la arquitectura reactiva del proyecto
+    private val _counting = MutableStateFlow(false)
     private var currentRotation = 0f
-    private var audioWasPlaying = false
-    private var isUserMuted = false
-
-    // ── Audio ──────────────────────────────────────────────────────────────
-
-    fun startBackground() {
-        if (!isUserMuted) audioManager.playBackground()
-    }
-
-    fun onFragmentResume() {
-        if (!counting && !isUserMuted) {
-            audioManager.resumeBackground()
-        }
-    }
-
-    fun onFragmentPause() {
-        audioManager.pauseBackground()
-        audioManager.stopSpinSound()
-    }
-
-    fun onFragmentDestroy() {
-        // Solo pausa — el MediaPlayer mantiene su posición para reanudar al volver
-        audioManager.pauseBackground()
-    }
-
-    fun toggleAudio() {
-        val audioEstabaPrendido = _isAudioOn.value == true
-        if (audioEstabaPrendido) {
-            isUserMuted = true
-            _isAudioOn.value = false
-            audioManager.pauseBackground()
-        } else {
-            isUserMuted = false
-            _isAudioOn.value = true
-            if (!counting) audioManager.resumeBackground()
-        }
-    }
-
-    fun onSpinStart() {
-        audioWasPlaying = audioManager.isBackgroundPlaying()
-        audioManager.pauseBackground()
-        audioManager.playSpinSound()
-    }
-
-    fun onSpinEnd() {
-        audioManager.stopSpinSound()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        audioManager.stopAllSounds()
-    }
-
-    // ── Giro ───────────────────────────────────────────────────────────────
 
     fun onPresionameClicked() {
-        if (counting) return
+        if (_counting.value) return
+        Timber.d("Botella girada — iniciando giro aleatorio")
 
-        counting = true
+        _counting.value = true
         _isButtonVisible.value = false
         _contador.value = null
 
@@ -137,9 +84,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     fun onDialogShown() { _showDialog.value = false }
 
     fun onDialogClosed() {
-        counting = false
-        if (audioWasPlaying && !isUserMuted) audioManager.resumeBackground()
+        _counting.value = false
+        Timber.d("Diálogo cerrado — juego listo para nueva partida")
     }
 
-    fun isCounting(): Boolean = counting
+    internal fun isCounting(): Boolean = _counting.value
 }
