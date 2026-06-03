@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Phones grandes: ~6"+ (ej. Motorola Edge 50 Pro, Samsung S series) -->
+<resources>
+    <dimen name="toolbar_margin_top">60dp</dimen>
+    <dimen name="toolbar_margin_horizontal">40dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="toolbar_corner_radius">30dp</dimen>
+</resources>

@@ -16,35 +16,37 @@ class RetosViewModel(application: Application) : AndroidViewModel(application) {
     private val _lista = MutableLiveData<List<RetoEntity>>()
     val lista: LiveData<List<RetoEntity>> get() = _lista
 
-    private val _loading = MutableLiveData(false)
-    val loading: LiveData<Boolean> get() = _loading
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> get() = _error
 
-    fun cargarRetos() {
-        viewModelScope.launch {
-            _loading.value = true
-            _lista.value = repository.obtenerTodos()
-            _loading.value = false
-        }
+    fun onErrorConsumed() { _error.value = null }
+
+    fun cargarRetos() = ejecutar("No se pudieron cargar los retos.") {
+        _lista.value = repository.obtenerTodos()
     }
 
-    fun agregarReto(descripcion: String) {
-        viewModelScope.launch {
-            repository.insertar(RetoEntity(descripcion = descripcion))
-            cargarRetos()
-        }
+    fun agregarReto(descripcion: String) = ejecutar("No se pudo agregar el reto.") {
+        repository.insertar(RetoEntity(descripcion = descripcion))
+        _lista.value = repository.obtenerTodos()
     }
 
-    fun editarReto(reto: RetoEntity) {
-        viewModelScope.launch {
-            repository.actualizar(reto)
-            cargarRetos()
-        }
+    fun editarReto(reto: RetoEntity) = ejecutar("No se pudo editar el reto.") {
+        repository.actualizar(reto)
+        _lista.value = repository.obtenerTodos()
     }
 
-    fun eliminarReto(reto: RetoEntity) {
+    fun eliminarReto(reto: RetoEntity) = ejecutar("No se pudo eliminar el reto.") {
+        repository.eliminar(reto)
+        _lista.value = repository.obtenerTodos()
+    }
+
+    private fun ejecutar(mensajeError: String, bloque: suspend () -> Unit) {
         viewModelScope.launch {
-            repository.eliminar(reto)
-            cargarRetos()
+            try {
+                bloque()
+            } catch (e: Exception) {
+                _error.value = mensajeError
+            }
         }
     }
 }

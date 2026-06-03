@@ -1,16 +1,344 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp"
-    android:height="216dp"
-    android:viewportWidth="108"
-    android:viewportHeight="216">
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="120dp"
+    android:height="240dp"
+    android:viewportWidth="120"
+    android:viewportHeight="240">
+
+    <!-- ═══════════════════════════════════ SOMBRA SUELO ═══ -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M36,12 L72,12 L72,48 C72,54.627 66.627,60 60,60 L48,60 C41.373,60 36,54.627 36,48 Z"/>
+        android:pathData="M30,234 Q60,242 90,234 Q88,228 60,230 Q32,228 30,234 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="radial"
+                android:centerX="60" android:centerY="233"
+                android:gradientRadius="32">
+                <item android:offset="0.0" android:color="#99000000"/>
+                <item android:offset="1.0" android:color="#00000000"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- ════════════════════════════════ FONDO BOTELLA (vidrio grueso) ═══ -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M30,48 L78,48 L78,180 C78,186.627 72.627,192 66,192 L42,192 C35.373,192 30,186.627 30,180 Z"/>
+        android:pathData="M34,215 Q34,228 60,228 Q86,228 86,215 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="radial"
+                android:centerX="60" android:centerY="220"
+                android:gradientRadius="28">
+                <item android:offset="0.0" android:color="#0D2205"/>
+                <item android:offset="0.6" android:color="#1A3D0A"/>
+                <item android:offset="0.85" android:color="#3A7A18"/>
+                <item android:offset="1.0" android:color="#0D2205"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- ════════════════════════════════ CUERPO PRINCIPAL ═══ -->
     <path
-        android:fillColor="#FF6B00"
-        android:pathData="M42,72 L66,72 L66,168 L42,168 Z"/>
+        android:pathData="M34,88 Q28,100 28,112 L28,215 Q28,228 60,228 Q92,228 92,215 L92,112 Q92,100 86,88 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="28" android:startY="155"
+                android:endX="92" android:endY="155">
+                <item android:offset="0.00" android:color="#0D2205"/>
+                <item android:offset="0.12" android:color="#1E4A0C"/>
+                <item android:offset="0.28" android:color="#3A8018"/>
+                <item android:offset="0.45" android:color="#52B022"/>
+                <item android:offset="0.55" android:color="#52B022"/>
+                <item android:offset="0.72" android:color="#3A8018"/>
+                <item android:offset="0.88" android:color="#1E4A0C"/>
+                <item android:offset="1.00" android:color="#0D2205"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- ════════════════════════════════ LÍQUIDO INTERIOR ═══ -->
+    <!-- Líquido oscuro visible a través del vidrio (80% llena) -->
+    <path
+        android:pathData="M34,108 Q60,104 86,108 L92,215 Q60,228 28,215 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="60" android:startY="108"
+                android:endX="60" android:endY="220">
+                <item android:offset="0.0" android:color="#880A180A"/>
+                <item android:offset="1.0" android:color="#CC040D04"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- Menisco: superficie curva del líquido -->
+    <path android:fillColor="#443A8018"
+        android:pathData="M34,108 Q60,103 86,108 Q60,114 34,108 Z"/>
+    <!-- Brillo en superficie del líquido -->
+    <path
+        android:pathData="M44,107 Q60,103 76,107 Q60,110 44,107 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="44" android:startY="107"
+                android:endX="76" android:endY="107">
+                <item android:offset="0.0" android:color="#00FFFFFF"/>
+                <item android:offset="0.5" android:color="#44FFFFFF"/>
+                <item android:offset="1.0" android:color="#00FFFFFF"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- ════════════════════════════════ PUNT (concavidad fondo) ═══ -->
+    <!-- Domo que sube desde el fondo — característica de botellas reales -->
+    <path
+        android:pathData="M38,216 Q60,204 82,216 Q60,224 38,216 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="radial"
+                android:centerX="60" android:centerY="210"
+                android:gradientRadius="24">
+                <item android:offset="0.0" android:color="#3A8018"/>
+                <item android:offset="0.6" android:color="#1E4A0C"/>
+                <item android:offset="1.0" android:color="#0D2205"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- Reflejo interior del punt -->
+    <path android:fillColor="#33FFFFFF"
+        android:pathData="M48,213 Q60,207 72,213 Q60,218 48,213 Z"/>
+    <!-- Sombra perimetral del punt -->
+    <path android:fillColor="#44000000"
+        android:pathData="M36,216 Q38,212 60,210 Q82,212 84,216 Q82,218 60,216 Q38,218 36,216 Z"/>
+
+    <!-- ════════════════════════════════ CUELLO ═══ -->
+    <path
+        android:pathData="M49,22 L71,22 L80,55 Q86,72 86,88 L34,88 Q34,72 40,55 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="34" android:startY="55"
+                android:endX="86" android:endY="55">
+                <item android:offset="0.00" android:color="#0D2205"/>
+                <item android:offset="0.35" android:color="#3A8018"/>
+                <item android:offset="0.65" android:color="#3A8018"/>
+                <item android:offset="1.00" android:color="#0D2205"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- ════════════════════════════════ TAPA (corona metálica) ═══ -->
+    <path
+        android:pathData="M47,6 Q60,1 73,6 L75,10 Q60,7 45,10 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="45" android:startY="8"
+                android:endX="75" android:endY="8">
+                <item android:offset="0.0" android:color="#555555"/>
+                <item android:offset="0.4" android:color="#FFFFFF"/>
+                <item android:offset="0.6" android:color="#DDDDDD"/>
+                <item android:offset="1.0" android:color="#555555"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path
+        android:pathData="M45,10 Q60,7 75,10 L73,22 L47,22 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="45" android:startY="16"
+                android:endX="75" android:endY="16">
+                <item android:offset="0.0" android:color="#666666"/>
+                <item android:offset="0.3" android:color="#BBBBBB"/>
+                <item android:offset="0.5" android:color="#EEEEEE"/>
+                <item android:offset="0.7" android:color="#AAAAAA"/>
+                <item android:offset="1.0" android:color="#555555"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- Estrías de la tapa corona -->
+    <path android:fillColor="#44000000"
+        android:pathData="M49,10 L50,22 L48,22 L47,10 Z"/>
+    <path android:fillColor="#44000000"
+        android:pathData="M53,9 L54,22 L52,22 L51,9 Z"/>
+    <path android:fillColor="#44000000"
+        android:pathData="M57,8 L58,22 L56,22 L55,8 Z"/>
+    <path android:fillColor="#44000000"
+        android:pathData="M62,8 L63,22 L61,22 L60,8 Z"/>
+    <path android:fillColor="#44000000"
+        android:pathData="M66,8 L67,22 L65,22 L64,8 Z"/>
+    <path android:fillColor="#44000000"
+        android:pathData="M70,9 L71,22 L69,22 L68,9 Z"/>
+    <path android:fillColor="#44000000"
+        android:pathData="M74,10 L75,22 L73,22 L72,10 Z"/>
+    <!-- Borde inferior tapa -->
+    <path android:fillColor="#333333"
+        android:pathData="M47,21 L73,21 L73,23 L47,23 Z"/>
+
+    <!-- ════════════════════════════════ ETIQUETA ═══ -->
+    <!-- Sombra etiqueta sobre vidrio -->
+    <path android:fillColor="#22000000"
+        android:pathData="M31,112 L89,112 L89,116 L31,116 Z"/>
+    <path android:fillColor="#22000000"
+        android:pathData="M31,196 L89,196 L89,200 L31,200 Z"/>
+    <!-- Fondo etiqueta -->
+    <path
+        android:pathData="M31,116 Q31,112 35,112 L85,112 Q89,112 89,116 L89,196 Q89,200 85,200 L35,200 Q31,200 31,196 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="31" android:startY="154"
+                android:endX="89" android:endY="154">
+                <item android:offset="0.0" android:color="#EDE0B8"/>
+                <item android:offset="0.5" android:color="#F9F0D0"/>
+                <item android:offset="1.0" android:color="#EDE0B8"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- Franja superior naranja etiqueta -->
+    <path android:fillColor="#7B2D5E"
+        android:pathData="M31,116 Q31,112 35,112 L85,112 Q89,112 89,116 L89,130 L31,130 Z"/>
+    <!-- Franja inferior naranja etiqueta -->
+    <path android:fillColor="#7B2D5E"
+        android:pathData="M31,182 L89,182 L89,196 Q89,200 85,200 L35,200 Q31,200 31,196 Z"/>
+    <!-- Líneas decorativas etiqueta -->
+    <path android:fillColor="#5A1F45"
+        android:pathData="M38,138 L82,138 L82,140 L38,140 Z"/>
+    <path android:fillColor="#5A1F45"
+        android:pathData="M38,143 L82,143 L82,145 L38,145 Z"/>
+    <!-- Círculo central etiqueta -->
+    <path
+        android:pathData="M52,150 Q60,144 68,150 Q74,156 68,162 Q60,168 52,162 Q46,156 52,150 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="radial"
+                android:centerX="60" android:centerY="156"
+                android:gradientRadius="10">
+                <item android:offset="0.0" android:color="#9B3D7E"/>
+                <item android:offset="1.0" android:color="#5A1F45"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path android:fillColor="#5A1F45"
+        android:pathData="M38,168 L82,168 L82,170 L38,170 Z"/>
+    <path android:fillColor="#5A1F45"
+        android:pathData="M38,173 L82,173 L82,175 L38,175 Z"/>
+
+    <!-- ════════════════════ REFLEJOS VIDRIO (efecto 3D hiper-realista) ═══ -->
+
+    <!-- Reflejo primario izquierdo — rayo de luz directo -->
+    <path
+        android:pathData="M35,90 Q32,102 32,112 L32,210 Q32,222 38,225 L42,225 L42,112 Q42,102 38,90 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="32" android:startY="157"
+                android:endX="42" android:endY="157">
+                <item android:offset="0.0" android:color="#88FFFFFF"/>
+                <item android:offset="1.0" android:color="#00FFFFFF"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Reflejo secundario izquierdo — difuso -->
+    <path
+        android:pathData="M43,90 Q41,102 41,112 L41,215 L50,215 L50,112 Q50,102 48,90 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="41" android:startY="152"
+                android:endX="50" android:endY="152">
+                <item android:offset="0.0" android:color="#33FFFFFF"/>
+                <item android:offset="1.0" android:color="#00FFFFFF"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Punto cáustico (caustic) — destello intenso en el hombro -->
+    <path
+        android:pathData="M37,92 Q40,88 45,90 Q43,98 38,97 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="radial"
+                android:centerX="41" android:centerY="93"
+                android:gradientRadius="6">
+                <item android:offset="0.0" android:color="#EEFFFFFF"/>
+                <item android:offset="1.0" android:color="#00FFFFFF"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Oscurecimiento borde derecho (efecto Fresnel) -->
+    <path
+        android:pathData="M82,90 Q87,102 88,112 L88,215 L84,215 L84,112 Q83,102 80,90 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="80" android:startY="152"
+                android:endX="88" android:endY="152">
+                <item android:offset="0.0" android:color="#00000000"/>
+                <item android:offset="1.0" android:color="#55000000"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Reflejo en cuello izquierdo -->
+    <path
+        android:pathData="M51,24 L55,24 L57,86 L50,86 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="50" android:startY="55"
+                android:endX="57" android:endY="55">
+                <item android:offset="0.0" android:color="#55FFFFFF"/>
+                <item android:offset="1.0" android:color="#00FFFFFF"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Brillo superior tapa -->
+    <path android:fillColor="#88FFFFFF"
+        android:pathData="M51,3 Q58,1 62,3 L62,7 Q58,5 51,7 Z"/>
+
+    <!-- ════════════════════════════════ GOTAS CONDENSACIÓN ═══ -->
+    <!-- Gota 1 — hombro izquierdo grande -->
+    <path android:fillColor="#66C8E0F0"
+        android:pathData="M37,92 Q34,97 37,102 Q40,97 37,92 Z"/>
+    <path android:fillColor="#CCFFFFFF"
+        android:pathData="M36,93 Q34.5,95 36,95.5 Z"/>
+    <path android:fillColor="#33000000"
+        android:pathData="M36.5,100 Q37.5,101.5 38,101 Q37.5,99.5 36.5,100 Z"/>
+
+    <!-- Gota 2 — hombro derecho mediana -->
+    <path android:fillColor="#55C8E0F0"
+        android:pathData="M80,96 Q78,100 80,104 Q82,100 80,96 Z"/>
+    <path android:fillColor="#BBFFFFFF"
+        android:pathData="M79,97 Q77.5,99 79,99.5 Z"/>
+
+    <!-- Gota 3 — cuerpo izquierdo pequeña -->
+    <path android:fillColor="#55C8E0F0"
+        android:pathData="M31,104 Q29,107 31,110 Q33,107 31,104 Z"/>
+    <path android:fillColor="#AAFFFFFF"
+        android:pathData="M30,105 Q29,106.5 30,107 Z"/>
+
+    <!-- Gota 4 — cuerpo derecho pequeña -->
+    <path android:fillColor="#44C8E0F0"
+        android:pathData="M85,102 Q83,105 85,108 Q87,105 85,102 Z"/>
+    <path android:fillColor="#AAFFFFFF"
+        android:pathData="M84,103 Q83,104.5 84,105 Z"/>
+
+    <!-- Gota 5 — cuello izquierdo diminuta -->
+    <path android:fillColor="#44C8E0F0"
+        android:pathData="M53,68 Q52,70 53,72 Q54,70 53,68 Z"/>
+    <path android:fillColor="#99FFFFFF"
+        android:pathData="M52.5,69 Q52,70 52.5,70 Z"/>
+
+    <!-- Gota 6 — cuello derecho diminuta -->
+    <path android:fillColor="#44C8E0F0"
+        android:pathData="M66,73 Q65,75 66,77 Q67,75 66,73 Z"/>
+    <path android:fillColor="#88FFFFFF"
+        android:pathData="M65.5,74 Q65,75 65.5,75 Z"/>
+
+    <!-- Reguero de agua — gota escurriendo -->
+    <path android:fillColor="#33C8E0F0"
+        android:pathData="M37,102 Q36.5,106 37,110 Q37.5,106 37,102 Z"/>
+
+    <!-- Reflejo en fondo de botella -->
+    <path
+        android:pathData="M36,218 Q60,214 84,218 L82,224 Q60,220 38,224 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="36" android:startY="221"
+                android:endX="84" android:endY="221">
+                <item android:offset="0.0" android:color="#00FFFFFF"/>
+                <item android:offset="0.5" android:color="#33FFFFFF"/>
+                <item android:offset="1.0" android:color="#00FFFFFF"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
 </vector>

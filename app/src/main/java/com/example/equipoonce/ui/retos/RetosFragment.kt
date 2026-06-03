@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.equipoonce.databinding.FragmentRetosBinding
 import com.example.equipoonce.ui.retos.dialogs.AgregarRetoDialog
@@ -40,7 +42,7 @@ class RetosFragment : Fragment() {
 
     private fun configurarToolbar() {
         binding.toolbarRetos.setNavigationOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            findNavController().navigateUp()
         }
     }
 
@@ -55,7 +57,7 @@ class RetosFragment : Fragment() {
                 EliminarRetoDialog.show(requireContext(), reto.descripcion) {
                     viewModel.eliminarReto(reto)
                 }
-            },
+            }
         )
         binding.rvRetos.layoutManager = LinearLayoutManager(requireContext())
         binding.rvRetos.adapter = adapter
@@ -63,7 +65,16 @@ class RetosFragment : Fragment() {
 
     private fun observarViewModel() {
         viewModel.lista.observe(viewLifecycleOwner) { lista ->
-            adapter.actualizarLista(lista)
+            adapter.submitList(lista)
+            binding.tvEmpty.visibility = if (lista.isEmpty()) View.VISIBLE else View.GONE
+            binding.rvRetos.visibility = if (lista.isEmpty()) View.GONE else View.VISIBLE
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) { mensaje ->
+            if (mensaje != null) {
+                Toast.makeText(requireContext(), mensaje, Toast.LENGTH_SHORT).show()
+                viewModel.onErrorConsumed()
+            }
         }
     }
 
@@ -74,7 +85,6 @@ class RetosFragment : Fragment() {
             }
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

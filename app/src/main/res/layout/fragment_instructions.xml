@@ -1,35 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://android.com"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="@color/bg_instructions">
 
-    <LinearLayout
+    <!-- AppBar con toolbar -->
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:fitsSystemWindows="true"
+        android:background="@color/bg_instructions"
+        app:elevation="0dp">
 
-
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbarInstructions"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/bg_instructions"
+            app:title="@string/title_rules"
+            app:titleTextColor="@color/orange_rules"
+            app:titleCentered="true"
             app:navigationIcon="@drawable/ic_arrow_back"
-            app:navigationIconTint="@color/orange_rules">
+            app:navigationIconTint="@color/orange_rules" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/title_rules"
-                android:textColor="@color/orange_rules"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_gravity="center" />
-        </androidx.appcompat.widget.Toolbar>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/orange_rules"
+            android:alpha="0.4" />
 
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Contenido con scroll -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,13 +58,13 @@
 
             <!-- Descripción 1 -->
             <TextView
-                android:id="@+id/tvInstructions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/desc_how_to_play"
-                android:textColor="@color/text_gray"
+                android:textColor="@color/text_white"
                 android:textSize="14sp"
-                android:lineSpacingMultiplier="1.3"
+                android:lineSpacingMultiplier="1.4"
+                android:justificationMode="inter_word"
                 android:layout_marginBottom="32dp" />
 
             <!-- Título 2 -->
@@ -73,21 +82,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/desc_who_wins"
-                android:textColor="@color/text_gray"
+                android:textColor="@color/text_white"
                 android:textSize="14sp"
-                android:lineSpacingMultiplier="1.3"
+                android:lineSpacingMultiplier="1.4"
+                android:justificationMode="inter_word"
                 android:layout_marginBottom="32dp" />
 
-            <!-- Imagen del triunfo -->
-            <ImageView
+            <!-- Animación de triunfo Lottie -->
+            <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/imgTriunfo"
                 android:layout_width="280dp"
                 android:layout_height="280dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_triunfo_animado"
+                app:lottie_rawRes="@raw/animacion_triunfo"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
                 android:contentDescription="@string/title_who_wins" />
 
         </LinearLayout>
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
 
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

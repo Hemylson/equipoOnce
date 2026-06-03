@@ -5,10 +5,12 @@ import com.example.equipoonce.data.remote.dto.PokemonDto
 
 class PokemonRepository(private val api: PokemonApiService) {
 
-    // Descarga el pokedex completo y devuelve uno aleatorio
+    private var cache: List<PokemonDto>? = null
+
     suspend fun getPokemonAleatorio(): PokemonDto? = try {
-        api.getPokedex().pokemon.randomOrNull()
+        val lista = cache ?: api.getPokedex().pokemon.also { cache = it }
+        lista.randomOrNull()
     } catch (e: Exception) {
-        null  // Si no hay red, el diálogo igual muestra el reto con placeholder
+        null
     }
 }
