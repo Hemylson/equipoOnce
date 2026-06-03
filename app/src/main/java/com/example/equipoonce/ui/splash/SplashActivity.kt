@@ -15,6 +15,8 @@ import com.example.equipoonce.utils.Constants
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashBinding
+    private val handler = Handler(Looper.getMainLooper())
+    private val navigateRunnable = Runnable { navigateToMain() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,14 +41,17 @@ class SplashActivity : AppCompatActivity() {
         val fadeInAnim = AnimationUtils.loadAnimation(this, R.anim.anim_fade_in)
         binding.tvPicoBotella.startAnimation(fadeInAnim)
 
-        // CA-4: Navegar al home después de 5 segundos
-        Handler(Looper.getMainLooper()).postDelayed({
-            navigateToMain()
-        }, Constants.SPLASH_DELAY_MS)
+        // CA-4: Navegar al home después del delay configurado
+        handler.postDelayed(navigateRunnable, Constants.SPLASH_DELAY_MS)
     }
 
     private fun navigateToMain() {
         startActivity(Intent(this, MainActivity::class.java))
-        finish() // CA-5: finish() evita regresar al splash con el botón atrás
+        finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(navigateRunnable)
     }
 }

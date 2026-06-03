@@ -12,12 +12,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.EquipoOnce">
+        android:theme="@style/Theme.EquipoOnce"
+        android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true">
 
         <!-- CA-1: Tema sin ActionBar para el splash -->
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
+            android:noHistory="true"
             android:theme="@style/Theme.EquipoOnce.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,11 +28,10 @@
             </intent-filter>
         </activity>
 
-        <!-- CA-5: MainActivity sin historial hacia el splash -->
+        <!-- MainActivity principal -->
         <activity
             android:name=".ui.main.MainActivity"
-            android:exported="false"
-            android:noHistory="false" />
+            android:exported="false" />
 
     </application>
 
