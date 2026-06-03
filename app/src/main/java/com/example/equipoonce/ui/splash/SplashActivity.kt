@@ -11,7 +11,9 @@ import com.example.equipoonce.R
 import com.example.equipoonce.databinding.ActivitySplashBinding
 import com.example.equipoonce.ui.main.MainActivity
 import com.example.equipoonce.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashBinding

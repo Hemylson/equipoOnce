@@ -27,8 +27,10 @@ import com.example.equipoonce.ui.challenge.ChallengeUiState
 import com.example.equipoonce.utils.Constants
 import com.example.equipoonce.ui.challenge.ChallengeViewModel
 import com.example.equipoonce.ui.challenge.MostrarRetoDialog
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private val viewModel: HomeViewModel by viewModels()
@@ -153,48 +155,52 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     // ── Observadores ───────────────────────────────────────────────────────
 
     private fun observarViewModel() {
-        viewModel.contador.observe(viewLifecycleOwner) { valor ->
-            if (valor != null) {
-                tvContador.visibility = View.VISIBLE
-                tvContador.text = valor.toString()
-            } else {
-                tvContador.visibility = View.INVISIBLE
-            }
-        }
-
-        viewModel.isButtonVisible.observe(viewLifecycleOwner) { visible ->
-            if (visible) {
-                btnPresioname.visibility = View.VISIBLE
-                btnPresioname.isEnabled = true
-                iniciarAnimacionBoton()
-            } else {
-                circlePresioname.clearAnimation()
-                circlePresioname.alpha = 1f
-                btnPresioname.visibility = View.INVISIBLE
-                btnPresioname.isEnabled = false
-            }
-        }
-
-        viewModel.isAudioOn.observe(viewLifecycleOwner) { audioOn ->
-            btnAudio.setImageResource(
-                if (audioOn) R.drawable.ic_volume_up else R.drawable.ic_volume_off
-            )
-        }
-
-        viewModel.spinEvent.observe(viewLifecycleOwner) { params ->
-            if (params != null && isAdded && !parentFragmentManager.isStateSaved) {
-                playBottleSpin(params)
-                viewModel.clearSpinEvent()
-            }
-        }
-
-        viewModel.showDialog.observe(viewLifecycleOwner) { shouldShow ->
-            if (shouldShow && isAdded && !parentFragmentManager.isStateSaved) {
-                val yaExiste = parentFragmentManager.findFragmentByTag(MostrarRetoDialog.TAG)
-                if (yaExiste == null) {
-                    MostrarRetoDialog.newInstance().show(parentFragmentManager, MostrarRetoDialog.TAG)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isAudioOn.collect { audioOn ->
+                    btnAudio.setImageResource(
+                        if (audioOn) R.drawable.ic_volume_up else R.drawable.ic_volume_off
+                    )
                 }
-                viewModel.onDialogShown()
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.spinUiState.collect { state ->
+                    if (!isAdded || parentFragmentManager.isStateSaved) return@collect
+                    when (state) {
+                        is SpinUiState.Idle -> {
+                            tvContador.visibility = View.INVISIBLE
+                            btnPresioname.visibility = View.VISIBLE
+                            btnPresioname.isEnabled = true
+                            iniciarAnimacionBoton()
+                        }
+                        is SpinUiState.Spinning -> {
+                            tvContador.visibility = View.INVISIBLE
+                            circlePresioname.clearAnimation()
+                            circlePresioname.alpha = 1f
+                            btnPresioname.visibility = View.INVISIBLE
+                            btnPresioname.isEnabled = false
+                            playBottleSpin(state.params)
+                        }
+                        is SpinUiState.Counting -> {
+                            tvContador.visibility = View.VISIBLE
+                            tvContador.text = state.value.toString()
+                            btnPresioname.visibility = View.VISIBLE
+                            btnPresioname.isEnabled = true
+                            iniciarAnimacionBoton()
+                        }
+                        is SpinUiState.DialogReady -> {
+                            tvContador.visibility = View.INVISIBLE
+                            val yaExiste = parentFragmentManager.findFragmentByTag(MostrarRetoDialog.TAG)
+                            if (yaExiste == null) {
+                                MostrarRetoDialog.newInstance().show(parentFragmentManager, MostrarRetoDialog.TAG)
+                            }
+                            viewModel.onDialogShown()
+                        }
+                    }
+                }
             }
         }
     }

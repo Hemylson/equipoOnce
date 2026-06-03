@@ -18,8 +18,10 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.equipoonce.R
 import com.example.equipoonce.databinding.DialogMostrarRetoBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MostrarRetoDialog : DialogFragment() {
 
     private var _binding: DialogMostrarRetoBinding? = null

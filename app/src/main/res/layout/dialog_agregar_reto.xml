@@ -104,6 +104,7 @@
                 android:textStyle="bold"
                 android:textSize="14sp"
                 android:enabled="false"
+                android:alpha="0.5"
                 app:backgroundTint="@android:color/transparent"
                 app:strokeColor="@color/btn_guardar_stroke"
                 app:strokeWidth="2dp"

@@ -5,7 +5,7 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import com.example.equipoonce.R
 
-class GameAudioManager(private val context: Context) {
+class GameAudioManager(private val context: Context) : IAudioManager {
 
     private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private var backgroundPlayer: MediaPlayer? = null
@@ -20,7 +20,7 @@ class GameAudioManager(private val context: Context) {
         )
     }
 
-    fun playBackground() {
+    override fun playBackground() {
         if (backgroundPlayer == null) {
             requestAudioFocus()
             backgroundPlayer = MediaPlayer.create(context, R.raw.background_music)?.apply {
@@ -33,7 +33,7 @@ class GameAudioManager(private val context: Context) {
         }
     }
 
-    fun pauseBackground() {
+    override fun pauseBackground() {
         runCatching {
             if (backgroundPlayer?.isPlaying == true) {
                 backgroundPlayer?.pause()
@@ -41,7 +41,7 @@ class GameAudioManager(private val context: Context) {
         }
     }
 
-    fun resumeBackground() {
+    override fun resumeBackground() {
         runCatching {
             if (backgroundPlayer?.isPlaying == false) {
                 backgroundPlayer?.start()
@@ -49,7 +49,7 @@ class GameAudioManager(private val context: Context) {
         }
     }
 
-    fun playSpinSound() {
+    override fun playSpinSound() {
         if (spinPlayer == null) {
             spinPlayer = MediaPlayer.create(context, R.raw.spin_sound)?.apply {
                 isLooping = true
@@ -61,16 +61,16 @@ class GameAudioManager(private val context: Context) {
         }
     }
 
-    fun stopSpinSound() {
+    override fun stopSpinSound() {
         runCatching { spinPlayer?.pause() }
         releasePlayer(spinPlayer)
         spinPlayer = null
     }
 
-    fun isBackgroundPlaying(): Boolean =
+    override fun isBackgroundPlaying(): Boolean =
         runCatching { backgroundPlayer?.isPlaying == true }.getOrDefault(false)
 
-    fun stopAllSounds() {
+    override fun stopAllSounds() {
         releasePlayer(spinPlayer)
         spinPlayer = null
         releasePlayer(backgroundPlayer)

@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
-    // kotlin.android ya está incluido en AGP 9.x — no aplicar por separado
-    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -34,10 +34,16 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
     kotlinOptions {
         jvmTarget = "11"
     }
+}
+
+ksp {
+    arg("dagger.hilt.android.internal.disableAndroidSuperclassValidation", "true")
+    arg("dagger.hilt.internal.useAggregatingRootProcessor", "true")
 }
 
 dependencies {
@@ -57,15 +63,21 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation(libs.coil)
     implementation(libs.androidx.recyclerview)
     testImplementation(libs.junit)
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation("androidx.fragment:fragment-ktx:1.8.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0")
     implementation("com.airbnb.android:lottie:6.4.0")
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation("com.jakewharton.timber:timber:5.0.1")
 
 
 }

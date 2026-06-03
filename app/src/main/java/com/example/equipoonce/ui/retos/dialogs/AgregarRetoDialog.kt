@@ -17,7 +17,10 @@ class AgregarRetoDialog {
                 override fun beforeTextChanged(s: CharSequence?, st: Int, c: Int, a: Int) {}
                 override fun onTextChanged(s: CharSequence?, st: Int, b: Int, c: Int) {}
                 override fun afterTextChanged(s: Editable?) {
-                    binding.btnGuardar.isEnabled = !s.isNullOrBlank()
+                    val tieneTexto = !s.isNullOrBlank()
+                    binding.btnGuardar.isEnabled = tieneTexto
+                    binding.btnGuardar.alpha = if (tieneTexto) 1f else 0.5f
+                    binding.btnGuardar.refreshDrawableState()
                 }
             })
 
