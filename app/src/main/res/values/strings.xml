@@ -23,4 +23,5 @@
     <string name="cd_editar">Editar reto</string>
     <string name="cd_eliminar">Eliminar reto</string>
     <string name="hint_descripcion_reto">Descripción del reto</string>
+    <string name="cd_bottle">Botella animada pico botella</string>
 </resources>
