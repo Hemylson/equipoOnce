@@ -13,39 +13,39 @@ class RetosViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = RetoRepository(application)
 
-    private val _lista = MutableLiveData<List<RetoEntity>>()
-    val lista: LiveData<List<RetoEntity>> get() = _lista
+    private val _uiState = MutableLiveData<RetosUiState>(RetosUiState.Loading)
+    val uiState: LiveData<RetosUiState> get() = _uiState
 
-    private val _error = MutableLiveData<String?>()
-    val error: LiveData<String?> get() = _error
-
-    fun onErrorConsumed() { _error.value = null }
-
-    fun cargarRetos() = ejecutar("No se pudieron cargar los retos.") {
-        _lista.value = repository.obtenerTodos()
+    fun cargarRetos() = ejecutar {
+        val lista = repository.obtenerTodos()
+        _uiState.value = if (lista.isEmpty()) RetosUiState.Empty else RetosUiState.Success(lista)
     }
 
-    fun agregarReto(descripcion: String) = ejecutar("No se pudo agregar el reto.") {
+    fun agregarReto(descripcion: String) = ejecutar {
         repository.insertar(RetoEntity(descripcion = descripcion))
-        _lista.value = repository.obtenerTodos()
+        val lista = repository.obtenerTodos()
+        _uiState.value = if (lista.isEmpty()) RetosUiState.Empty else RetosUiState.Success(lista)
     }
 
-    fun editarReto(reto: RetoEntity) = ejecutar("No se pudo editar el reto.") {
+    fun editarReto(reto: RetoEntity) = ejecutar {
         repository.actualizar(reto)
-        _lista.value = repository.obtenerTodos()
+        val lista = repository.obtenerTodos()
+        _uiState.value = if (lista.isEmpty()) RetosUiState.Empty else RetosUiState.Success(lista)
     }
 
-    fun eliminarReto(reto: RetoEntity) = ejecutar("No se pudo eliminar el reto.") {
+    fun eliminarReto(reto: RetoEntity) = ejecutar {
         repository.eliminar(reto)
-        _lista.value = repository.obtenerTodos()
+        val lista = repository.obtenerTodos()
+        _uiState.value = if (lista.isEmpty()) RetosUiState.Empty else RetosUiState.Success(lista)
     }
 
-    private fun ejecutar(mensajeError: String, bloque: suspend () -> Unit) {
+    private fun ejecutar(bloque: suspend () -> Unit) {
         viewModelScope.launch {
+            _uiState.value = RetosUiState.Loading
             try {
                 bloque()
             } catch (e: Exception) {
-                _error.value = mensajeError
+                _uiState.value = RetosUiState.Error("Operación fallida. Intenta de nuevo.")
             }
         }
     }
