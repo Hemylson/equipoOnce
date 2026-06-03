@@ -1,27 +1,97 @@
 package com.example.equipoonce.ui.challenge
 
-import android.app.Dialog
+import android.graphics.Color
+import android.content.DialogInterface
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import coil.load
+import coil.transform.CircleCropTransformation
+import com.example.equipoonce.R
 import com.example.equipoonce.databinding.DialogMostrarRetoBinding
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.launch
 
 class MostrarRetoDialog : DialogFragment() {
 
     private var _binding: DialogMostrarRetoBinding? = null
     private val binding get() = _binding!!
 
-    // TODO: recibir RetoEntity via Bundle y cargar imagen de Pokémon con Coil
+    private val viewModel: ChallengeViewModel by activityViewModels()
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        _binding = DialogMostrarRetoBinding.inflate(layoutInflater)
-        return MaterialAlertDialogBuilder(requireContext())
-            .setView(binding.root)
-            .setPositiveButton("Hecho") { _, _ ->
-                // TODO: registrar reto como completado y llamar a obtenerRetoAleatorio
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
+        _binding = DialogMostrarRetoBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Fondo transparente para ver el degradado del XML
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        // CA-6: Solo se cierra con el botón
+        isCancelable = false
+
+        // CA-5: Cerrar el diálogo
+        binding.btnCerrar.setOnClickListener { dismiss() }
+
+        observarEstado()
+        viewModel.cargarRetoYPokemon()
+    }
+
+    private fun observarEstado() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    when (state) {
+                        is ChallengeUiState.Loading -> {
+                            binding.progressBar.visibility = View.VISIBLE
+                            binding.tvReto.visibility = View.GONE
+                            binding.imgPokemon.visibility = View.GONE
+                        }
+                        is ChallengeUiState.Success -> {
+                            binding.progressBar.visibility = View.GONE
+                            binding.tvReto.visibility = View.VISIBLE
+                            binding.imgPokemon.visibility = View.VISIBLE
+
+                            binding.tvReto.text = state.reto.descripcion
+
+                            // CA-2: img es la URL directa del campo "img" del JSON de Biuni
+                            binding.imgPokemon.load(state.pokemon?.img) {
+                                crossfade(true)
+                                transformations(CircleCropTransformation())
+                                placeholder(R.drawable.ic_pokemon_placeholder)
+                                error(R.drawable.ic_pokemon_placeholder)
+                            }
+                        }
+                        is ChallengeUiState.Error -> {
+                            binding.progressBar.visibility = View.GONE
+                            binding.tvReto.visibility = View.VISIBLE
+                            binding.imgPokemon.visibility = View.VISIBLE
+                            binding.tvReto.text = state.message
+                            binding.imgPokemon.setImageResource(R.drawable.ic_pokemon_placeholder)
+                        }
+                    }
+                }
             }
-            .setNegativeButton("Pasar", null)
-            .create()
+        }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        setFragmentResult(RESULT_KEY, bundleOf(KEY_DIALOG_CLOSED to true))
+        super.onDismiss(dialog)
     }
 
     override fun onDestroyView() {
@@ -31,5 +101,8 @@ class MostrarRetoDialog : DialogFragment() {
 
     companion object {
         const val TAG = "MostrarRetoDialog"
+        const val RESULT_KEY = "MostrarRetoDialogResult"
+        const val KEY_DIALOG_CLOSED = "closed"
+        fun newInstance() = MostrarRetoDialog()
     }
 }

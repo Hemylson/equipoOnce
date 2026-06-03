@@ -1,17 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://android.com"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="@color/bg_instructions">
 
-    <!-- TODO: poblar con instrucciones del juego Pico Botella desde strings.xml -->
-    <TextView
-        android:id="@+id/tvInstructions"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:lineSpacingMultiplier="1.4"
-        android:text="Instrucciones del juego"
-        android:textSize="16sp" />
+        android:orientation="vertical">
 
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarInstructions"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/bg_instructions"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@color/orange_rules">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_rules"
+                android:textColor="@color/orange_rules"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_gravity="center" />
+        </androidx.appcompat.widget.Toolbar>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <!-- Título 1 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_how_to_play"
+                android:textColor="@color/text_white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Descripción 1 -->
+            <TextView
+                android:id="@+id/tvInstructions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/desc_how_to_play"
+                android:textColor="@color/text_gray"
+                android:textSize="14sp"
+                android:lineSpacingMultiplier="1.3"
+                android:layout_marginBottom="32dp" />
+
+            <!-- Título 2 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_who_wins"
+                android:textColor="@color/text_white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Descripción 2 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/desc_who_wins"
+                android:textColor="@color/text_gray"
+                android:textSize="14sp"
+                android:lineSpacingMultiplier="1.3"
+                android:layout_marginBottom="32dp" />
+
+            <!-- Imagen del triunfo -->
+            <ImageView
+                android:id="@+id/imgTriunfo"
+                android:layout_width="280dp"
+                android:layout_height="280dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_triunfo_animado"
+                android:contentDescription="@string/title_who_wins" />
+
+        </LinearLayout>
+    </LinearLayout>
 </androidx.core.widget.NestedScrollView>
+

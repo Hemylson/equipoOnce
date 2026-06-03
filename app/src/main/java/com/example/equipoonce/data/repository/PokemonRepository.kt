@@ -4,6 +4,11 @@ import com.example.equipoonce.data.remote.PokemonApiService
 import com.example.equipoonce.data.remote.dto.PokemonDto
 
 class PokemonRepository(private val api: PokemonApiService) {
-    // TODO: agregar lógica para obtener Pokémon aleatorio para asignar a retos
-    suspend fun getPokemon(name: String): PokemonDto = api.getPokemon(name)
+
+    // Descarga el pokedex completo y devuelve uno aleatorio
+    suspend fun getPokemonAleatorio(): PokemonDto? = try {
+        api.getPokedex().pokemon.randomOrNull()
+    } catch (e: Exception) {
+        null  // Si no hay red, el diálogo igual muestra el reto con placeholder
+    }
 }

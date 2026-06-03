@@ -1,11 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.appbar.MaterialToolbar
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/toolbar"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
-    android:background="?attr/colorPrimary">
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp"
+    app:cardBackgroundColor="@android:color/black"
+    app:cardCornerRadius="30dp"
+    app:cardElevation="8dp">
 
-    <!-- TODO: personalizar con logo, título del juego o menú de opciones -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarView"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@android:color/transparent"
+        android:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-</com.google.android.material.appbar.MaterialToolbar>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+        <ImageButton
+            android:id="@+id/btnCalificar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:src="@drawable/ic_menu_star"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_calificar" />
+
+        <ImageButton
+            android:id="@+id/btnAudio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:src="@android:drawable/ic_lock_silent_mode_off"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_audio" />
+
+        <ImageButton
+            android:id="@+id/btnInstrucciones"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:src="@android:drawable/ic_menu_info_details"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_instrucciones" />
+
+        <ImageButton
+            android:id="@+id/btnRetos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:src="@android:drawable/ic_menu_add"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_retos" />
+
+        <ImageButton
+            android:id="@+id/btnCompartir"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:src="@android:drawable/ic_menu_share"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_compartir" />
+
+        </LinearLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+</com.google.android.material.card.MaterialCardView>

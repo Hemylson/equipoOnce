@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.equipoonce.utils.Constants
 
 @Database(entities = [RetoEntity::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
@@ -12,16 +11,18 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun retoDao(): RetoDao
 
     companion object {
-        @Volatile private var INSTANCE: AppDatabase? = null
+        @Volatile
+        private var INSTANCE: AppDatabase? = null
 
-        fun getInstance(context: Context): AppDatabase {
-            // TODO: migrar a inyección de dependencias (Hilt/Koin) cuando escale
+        fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
-                Room.databaseBuilder(
+                val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    Constants.DATABASE_NAME
-                ).build().also { INSTANCE = it }
+                    "pico_botella_db"
+                ).build()
+                INSTANCE = instance
+                instance
             }
         }
     }

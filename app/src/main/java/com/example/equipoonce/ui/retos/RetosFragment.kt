@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.equipoonce.databinding.FragmentRetosBinding
 import com.example.equipoonce.ui.retos.dialogs.AgregarRetoDialog
 import com.example.equipoonce.ui.retos.dialogs.EditarRetoDialog
@@ -15,10 +17,12 @@ class RetosFragment : Fragment() {
     private var _binding: FragmentRetosBinding? = null
     private val binding get() = _binding!!
 
-    // TODO: instanciar RetosViewModel con ViewModelFactory cuando esté implementado
+    private val viewModel: RetosViewModel by viewModels()
+    private lateinit var adapter: RetosAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentRetosBinding.inflate(inflater, container, false)
@@ -27,13 +31,50 @@ class RetosFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // TODO: configurar RecyclerView con RetosAdapter
-        // TODO: observar retos del ViewModel con lifecycleScope.launch + collect
-        // TODO: conectar FAB con AgregarRetoDialog
-        binding.fabAgregarReto.setOnClickListener {
-            AgregarRetoDialog().show(parentFragmentManager, AgregarRetoDialog.TAG)
+        configurarToolbar()
+        configurarRecyclerView()
+        observarViewModel()
+        configurarFab()
+        viewModel.cargarRetos()
+    }
+
+    private fun configurarToolbar() {
+        binding.toolbarRetos.setNavigationOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
     }
+
+    private fun configurarRecyclerView() {
+        adapter = RetosAdapter(
+            onEdit = { reto ->
+                EditarRetoDialog.show(requireContext(), reto.descripcion) { nuevaDescripcion ->
+                    viewModel.editarReto(reto.copy(descripcion = nuevaDescripcion))
+                }
+            },
+            onDelete = { reto ->
+                EliminarRetoDialog.show(requireContext(), reto.descripcion) {
+                    viewModel.eliminarReto(reto)
+                }
+            },
+        )
+        binding.rvRetos.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvRetos.adapter = adapter
+    }
+
+    private fun observarViewModel() {
+        viewModel.lista.observe(viewLifecycleOwner) { lista ->
+            adapter.actualizarLista(lista)
+        }
+    }
+
+    private fun configurarFab() {
+        binding.fabAgregarReto.setOnClickListener {
+            AgregarRetoDialog.show(requireContext()) { descripcion ->
+                viewModel.agregarReto(descripcion)
+            }
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

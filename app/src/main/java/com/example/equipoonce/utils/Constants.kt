@@ -1,8 +1,7 @@
 package com.example.equipoonce.utils
 
 object Constants {
-    const val POKEMON_BASE_URL = "https://pokeapi.co/api/v2/"
+    const val POKEMON_BASE_URL = "https://raw.githubusercontent.com/Biuni/PokemonGO-Pokedex/master/"
     const val DATABASE_NAME = "picobotella.db"
-    const val SPLASH_DELAY_MS = 2000L
-    // TODO: agregar constantes de juego (tiempo de giro, número de jugadores, etc.)
+    const val SPLASH_DELAY_MS = 5000L  // CA-4: 5 segundos en el splash
 }
