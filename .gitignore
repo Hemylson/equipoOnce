@@ -12,3 +12,7 @@ local.properties
 # Scripts locales con credenciales
 jira_update.py
 jira_issues.json
+# Configs de editor/IDE y herramientas locales
+.claude/
+.vscode/
+CLAUDE.md

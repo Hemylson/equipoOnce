@@ -2,9 +2,9 @@ package com.example.equipoonce.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.equipoonce.data.repository.PokemonRepository
-import com.example.equipoonce.data.repository.RetoRepository
-import com.example.equipoonce.ui.challenge.ChallengeViewModel
+import com.example.equipoonce.repository.PokemonRepository
+import com.example.equipoonce.repository.RetoRepository
+import com.example.equipoonce.view.challenge.ChallengeViewModel
 
 class ChallengeViewModelFactory(
     private val retoRepository: RetoRepository,

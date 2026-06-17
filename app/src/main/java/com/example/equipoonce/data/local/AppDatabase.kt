@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.equipoonce.model.RetoEntity
+import com.example.equipoonce.utils.Constants
 
 @Database(entities = [RetoEntity::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
@@ -19,7 +21,7 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "pico_botella_db"
+                    Constants.DATABASE_NAME
                 ).build()
                 INSTANCE = instance
                 instance

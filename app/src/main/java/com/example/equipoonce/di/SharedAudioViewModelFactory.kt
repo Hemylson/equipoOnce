@@ -2,7 +2,7 @@ package com.example.equipoonce.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.equipoonce.ui.shared.SharedAudioViewModel
+import com.example.equipoonce.view.shared.SharedAudioViewModel
 import com.example.equipoonce.utils.GameAudioManager
 
 class SharedAudioViewModelFactory(

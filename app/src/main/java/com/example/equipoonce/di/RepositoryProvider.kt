@@ -2,9 +2,9 @@ package com.example.equipoonce.di
 
 import android.content.Context
 import com.example.equipoonce.data.local.AppDatabase
-import com.example.equipoonce.data.remote.RetrofitClient
-import com.example.equipoonce.data.repository.PokemonRepository
-import com.example.equipoonce.data.repository.RetoRepository
+import com.example.equipoonce.webservice.RetrofitClient
+import com.example.equipoonce.repository.PokemonRepository
+import com.example.equipoonce.repository.RetoRepository
 import com.example.equipoonce.utils.GameAudioManager
 
 /**

@@ -18,7 +18,7 @@
 
         <!-- CA-1: Tema sin ActionBar para el splash -->
         <activity
-            android:name=".ui.splash.SplashActivity"
+            android:name=".view.splash.SplashActivity"
             android:exported="true"
             android:noHistory="true"
             android:theme="@style/Theme.EquipoOnce.NoActionBar">
@@ -30,7 +30,7 @@
 
         <!-- MainActivity principal -->
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".view.main.MainActivity"
             android:exported="false" />
 
     </application>

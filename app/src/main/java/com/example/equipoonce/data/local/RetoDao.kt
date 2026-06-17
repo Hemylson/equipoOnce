@@ -1,6 +1,7 @@
 package com.example.equipoonce.data.local
 
 import androidx.room.*
+import com.example.equipoonce.model.RetoEntity
 
 @Dao
 interface RetoDao {

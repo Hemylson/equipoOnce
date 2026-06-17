@@ -2,8 +2,8 @@ package com.example.equipoonce.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.equipoonce.data.repository.RetoRepository
-import com.example.equipoonce.ui.retos.RetosViewModel
+import com.example.equipoonce.repository.RetoRepository
+import com.example.equipoonce.view.retos.RetosViewModel
 
 class RetosViewModelFactory(
     private val repository: RetoRepository
