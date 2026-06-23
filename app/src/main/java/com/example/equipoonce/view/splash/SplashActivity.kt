@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.equipoonce.R
 import com.example.equipoonce.databinding.ActivitySplashBinding
+import com.example.equipoonce.view.auth.LoginActivity
 import com.example.equipoonce.view.main.MainActivity
 import kotlinx.coroutines.launch
 import dagger.hilt.android.AndroidEntryPoint
@@ -74,15 +75,8 @@ class SplashActivity : AppCompatActivity() {
         finish()
     }
 
-    /**
-     * TODO (HU 2.0 - Login): reemplazar el cuerpo de este método por:
-     *
-     *   startActivity(Intent(this, LoginActivity::class.java))
-     *   finish()
-     *
-     * Mientras tanto, navega al Home para no romper la app en desarrollo.
-     */
     private fun navigateToLogin() {
-        navigateToMain()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
     }
 }

@@ -19,4 +19,17 @@
     <string name="cd_eliminar">Eliminar reto</string>
     <string name="hint_descripcion_reto">Descripción del reto</string>
     <string name="cd_bottle">Botella animada pico botella</string>
+
+    <!-- HU 1.0 / 2.0 — Autenticación -->
+    <string name="auth_titulo">Pico Botella</string>
+    <string name="auth_subtitulo">Inicia sesión para jugar</string>
+    <string name="auth_hint_email">Correo electrónico</string>
+    <string name="auth_hint_password">Contraseña (6–10 dígitos)</string>
+    <string name="auth_btn_login">Iniciar sesión</string>
+    <string name="auth_btn_registrar">Registrarse</string>
+    <string name="auth_cd_toggle_password">Mostrar u ocultar contraseña</string>
+    <string name="auth_error_email">Correo inválido (máx. 40 caracteres)</string>
+    <string name="auth_error_password">La contraseña debe tener 6–10 dígitos numéricos</string>
+    <string name="auth_login_ok">Sesión iniciada</string>
+    <string name="auth_registro_ok">Cuenta creada</string>
 </resources>
