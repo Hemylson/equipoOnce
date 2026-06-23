@@ -5,8 +5,12 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import timber.log.Timber
 import com.example.equipoonce.R
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class GameAudioManager(private val context: Context) {
+@Singleton
+class GameAudioManager @Inject constructor(@ApplicationContext private val context: Context) {
 
     private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private var backgroundPlayer: MediaPlayer? = null
