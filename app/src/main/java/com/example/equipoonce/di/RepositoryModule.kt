@@ -1,10 +1,16 @@
 package com.example.equipoonce.di
 
-import com.example.equipoonce.repository.RetoRepository
-import com.example.equipoonce.repository.PokemonRepository
+import android.content.Context
+import com.example.equipoonce.data.local.AppDatabase
+import com.example.equipoonce.data.local.RetoDao
+import com.example.equipoonce.data.remote.PokemonApiService
+import com.example.equipoonce.data.repository.PokemonRepository
+import com.example.equipoonce.data.repository.RetoRepository
+import com.example.equipoonce.utils.GameAudioManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -12,16 +18,26 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object RepositoryModule {
 
-    // Mientras Alan y Emilson suben sus interfaces, proveemos las implementaciones actuales directamente
-    // para evitar el crash por falta de dependencias en Hilt.
-    
-    /* 
     @Provides
     @Singleton
-    fun provideRetoRepository(retoRepository: RetoRepository): RetoRepository = retoRepository
-    */
-    
-    // Al usar @Inject constructor en las clases de repositorio, Hilt ya sabe cómo crearlas
-    // si sus dependencias (Firestore, ApiService) están en otros módulos.
-    // No necesitamos @Provides si no hay interfaces involucradas aún.
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase =
+        AppDatabase.getDatabase(context)
+
+    @Provides
+    @Singleton
+    fun provideRetoDao(database: AppDatabase): RetoDao = database.retoDao()
+
+    @Provides
+    @Singleton
+    fun provideRetoRepository(dao: RetoDao): RetoRepository = RetoRepository(dao)
+
+    @Provides
+    @Singleton
+    fun providePokemonRepository(apiService: PokemonApiService): PokemonRepository =
+        PokemonRepository(apiService)
+
+    @Provides
+    @Singleton
+    fun provideGameAudioManager(@ApplicationContext context: Context): GameAudioManager =
+        GameAudioManager(context)
 }
