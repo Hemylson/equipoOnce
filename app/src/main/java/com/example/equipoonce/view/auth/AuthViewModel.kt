@@ -27,6 +27,10 @@ class AuthViewModel @Inject constructor(
         private const val MIN_PASSWORD_LENGTH = 6
         private const val MAX_PASSWORD_LENGTH = 10
         private val EMAIL_REGEX = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
+
+        // CA HU 2.0 — Criterios 9 y 13: textos exactos del Toast.
+        const val ERROR_LOGIN = "Login incorrecto"
+        const val ERROR_REGISTRO = "Error en el registro"
     }
 
     private val _uiState = MutableStateFlow<AuthUiState>(AuthUiState.Idle)
@@ -47,11 +51,11 @@ class AuthViewModel @Inject constructor(
     fun formularioValido(email: String, password: String): Boolean =
         emailValido(email) && passwordValida(password)
 
-    fun login(email: String, password: String) = ejecutar {
+    fun login(email: String, password: String) = ejecutar(ERROR_LOGIN) {
         repository.login(email.trim(), password)
     }
 
-    fun registrar(email: String, password: String) = ejecutar {
+    fun registrar(email: String, password: String) = ejecutar(ERROR_REGISTRO) {
         repository.registrar(email.trim(), password)
     }
 
@@ -59,7 +63,7 @@ class AuthViewModel @Inject constructor(
         _uiState.value = AuthUiState.Idle
     }
 
-    private fun ejecutar(bloque: suspend () -> Unit) {
+    private fun ejecutar(mensajeError: String, bloque: suspend () -> Unit) {
         viewModelScope.launch {
             _uiState.value = AuthUiState.Loading
             try {
@@ -67,21 +71,8 @@ class AuthViewModel @Inject constructor(
                 _uiState.value = AuthUiState.Success
             } catch (e: Exception) {
                 Timber.e(e, "Error de autenticación")
-                _uiState.value = AuthUiState.Error(mapearError(e))
+                _uiState.value = AuthUiState.Error(mensajeError)
             }
         }
-    }
-
-    private fun mapearError(e: Exception): String = when {
-        e.message?.contains("password is invalid", ignoreCase = true) == true ||
-            e.message?.contains("credential is incorrect", ignoreCase = true) == true ->
-            "Correo o contraseña incorrectos."
-        e.message?.contains("no user record", ignoreCase = true) == true ->
-            "No existe una cuenta con ese correo."
-        e.message?.contains("email address is already in use", ignoreCase = true) == true ->
-            "Ese correo ya está registrado."
-        e.message?.contains("network", ignoreCase = true) == true ->
-            "Sin conexión. Verifica tu internet."
-        else -> "No se pudo completar la operación. Intenta de nuevo."
     }
 }

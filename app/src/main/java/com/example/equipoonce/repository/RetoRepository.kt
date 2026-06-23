@@ -2,6 +2,7 @@ package com.example.equipoonce.repository
 
 import com.example.equipoonce.model.Reto
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -21,15 +22,24 @@ class RetoRepository @Inject constructor(private val firestore: FirebaseFirestor
     }
 
     suspend fun obtenerTodos(): List<Reto> = withContext(Dispatchers.IO) {
-        retosCollection.get().await().documents.map { document ->
-            val descripcion = document.getString("descripcion") ?: ""
-            Reto(id = document.id, descripcion = descripcion)
-        }
+        // HU 7.0 C6: el reto más reciente (timestamp mayor) queda primero.
+        retosCollection
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .get()
+            .await()
+            .documents.map { document ->
+                Reto(
+                    id = document.id,
+                    descripcion = document.getString("descripcion") ?: "",
+                    timestamp = document.getLong("timestamp") ?: 0L
+                )
+            }
     }
 
     suspend fun actualizar(reto: Reto) = withContext(Dispatchers.IO) {
         require(reto.id.isNotBlank()) { "El reto debe tener un id válido para actualizarse." }
-        retosCollection.document(reto.id).set(reto).await()
+        // Solo se actualiza la descripción para conservar la posición original en la lista.
+        retosCollection.document(reto.id).update("descripcion", reto.descripcion).await()
     }
 
     suspend fun eliminar(reto: Reto) = withContext(Dispatchers.IO) {

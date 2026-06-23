@@ -10,7 +10,9 @@ class PokemonRepository @Inject constructor(private val api: PokemonApiService) 
 
     suspend fun getPokemonAleatorio(): PokemonDto? = try {
         val lista = cache ?: api.getPokedex().pokemon.also { cache = it }
-        lista.randomOrNull()
+        // El JSON trae URLs http:// (serebii) que redirigen a https y fallan en el
+        // dispositivo; forzamos https para cargar la imagen directamente.
+        lista.randomOrNull()?.let { it.copy(img = it.img.replaceFirst("http://", "https://")) }
     } catch (e: Exception) {
         null
     }

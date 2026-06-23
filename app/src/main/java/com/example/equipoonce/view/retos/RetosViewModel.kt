@@ -22,11 +22,10 @@ class RetosViewModel @Inject constructor(private val repository: RetoRepository)
     private val _uiState = MutableStateFlow<RetosUiState>(RetosUiState.Loading)
     val uiState: StateFlow<RetosUiState> = _uiState
 
-    fun cargarRetos() = ejecutar {
+    /** Carga inicial: aquí sí se muestra el spinner. */
+    fun cargarRetos() = ejecutar(mostrarLoading = true) {
         Timber.d("Cargando retos...")
-        val lista = repository.obtenerTodos()
-        Timber.d("Retos cargados: ${lista.size}")
-        _uiState.value = if (lista.isEmpty()) RetosUiState.Empty else RetosUiState.Success(lista)
+        refrescarLista()
     }
 
     fun agregarReto(descripcion: String) {
@@ -36,11 +35,11 @@ class RetosViewModel @Inject constructor(private val repository: RetoRepository)
             _uiState.value = RetosUiState.Error(error)
             return
         }
-        ejecutar {
+        // Sin Loading: DiffUtil actualiza solo el ítem nuevo (sin recargar la vista).
+        ejecutar(mostrarLoading = false) {
             repository.insertar(Reto(descripcion = descripcion.trim()))
             Timber.d("Reto agregado: ${descripcion.trim()}")
-            val lista = repository.obtenerTodos()
-            _uiState.value = if (lista.isEmpty()) RetosUiState.Empty else RetosUiState.Success(lista)
+            refrescarLista()
         }
     }
 
@@ -51,17 +50,21 @@ class RetosViewModel @Inject constructor(private val repository: RetoRepository)
             _uiState.value = RetosUiState.Error(error)
             return
         }
-        ejecutar {
+        ejecutar(mostrarLoading = false) {
             repository.actualizar(Reto(id = id, descripcion = nuevaDescripcion.trim()))
             Timber.d("Reto editado id=$id")
-            val lista = repository.obtenerTodos()
-            _uiState.value = if (lista.isEmpty()) RetosUiState.Empty else RetosUiState.Success(lista)
+            refrescarLista()
         }
     }
 
-    fun eliminarReto(reto: Reto) = ejecutar {
+    fun eliminarReto(reto: Reto) = ejecutar(mostrarLoading = false) {
         repository.eliminar(reto)
         Timber.d("Reto eliminado id=${reto.id}")
+        refrescarLista()
+    }
+
+    /** Relee la lista y publica Success/Empty sin pasar por Loading. */
+    private suspend fun refrescarLista() {
         val lista = repository.obtenerTodos()
         _uiState.value = if (lista.isEmpty()) RetosUiState.Empty else RetosUiState.Success(lista)
     }
@@ -76,9 +79,9 @@ class RetosViewModel @Inject constructor(private val repository: RetoRepository)
         }
     }
 
-    private fun ejecutar(bloque: suspend () -> Unit) {
+    private fun ejecutar(mostrarLoading: Boolean, bloque: suspend () -> Unit) {
         viewModelScope.launch {
-            _uiState.value = RetosUiState.Loading
+            if (mostrarLoading) _uiState.value = RetosUiState.Loading
             try {
                 bloque()
             } catch (e: Exception) {

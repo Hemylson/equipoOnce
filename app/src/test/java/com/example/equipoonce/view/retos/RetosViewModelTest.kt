@@ -56,7 +56,8 @@ class RetosViewModelTest {
         viewModel.agregarReto("Cantar una canción")
         advanceUntilIdle()
 
-        coVerify { repository.insertar(Reto(descripcion = "Cantar una canción")) }
+        // El timestamp es no determinista (hora actual), se verifica solo la descripción.
+        coVerify { repository.insertar(match { it.descripcion == "Cantar una canción" }) }
     }
 
     @Test

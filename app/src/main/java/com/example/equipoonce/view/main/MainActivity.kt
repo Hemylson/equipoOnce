@@ -37,7 +37,13 @@ class MainActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                finishAffinity()
+                // En el Home, atrás/gesto sale de la app (HU 3 C9).
+                // En otras pantallas (Retos, Instrucciones) regresa al Home.
+                if (navController.currentDestination?.id == R.id.homeFragment) {
+                    finishAffinity()
+                } else {
+                    navController.navigateUp()
+                }
             }
         })
     }
