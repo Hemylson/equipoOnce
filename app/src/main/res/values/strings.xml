@@ -22,7 +22,6 @@
 
     <!-- HU 1.0 / 2.0 — Autenticación -->
     <string name="auth_titulo">pico botella</string>
-    <string name="auth_subtitulo">Inicia sesión para jugar</string>
     <string name="auth_hint_email">Email</string>
     <string name="auth_hint_password">Password</string>
     <string name="auth_btn_login">Login</string>
