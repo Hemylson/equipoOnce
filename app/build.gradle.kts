@@ -73,6 +73,8 @@ dependencies {
     implementation("com.airbnb.android:lottie:6.4.0")
     implementation("com.jakewharton.timber:timber:5.0.1")
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

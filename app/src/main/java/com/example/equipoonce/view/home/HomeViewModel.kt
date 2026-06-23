@@ -2,6 +2,7 @@ package com.example.equipoonce.view.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.equipoonce.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,9 @@ data class SpinParams(val targetAngle: Float, val durationMs: Long) {
 }
 
 @HiltViewModel
-class HomeViewModel @Inject constructor() : ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val authRepository: AuthRepository
+) : ViewModel() {
 
     companion object {
         private const val MIN_SPIN_DURATION_MS = 4000L
@@ -41,6 +44,18 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
     private val _showDialog = MutableStateFlow(false)
     val showDialog: StateFlow<Boolean> = _showDialog
+
+    private val _logoutEvent = MutableStateFlow(false)
+    val logoutEvent: StateFlow<Boolean> = _logoutEvent
+
+    /** HU 3.0 — cierra la sesión de Firebase y dispara la navegación al Login. */
+    fun cerrarSesion() {
+        authRepository.logout()
+        Timber.d("Sesión cerrada por el usuario")
+        _logoutEvent.value = true
+    }
+
+    fun onLogoutHandled() { _logoutEvent.value = false }
 
     private val _counting = MutableStateFlow(false)
     private var currentRotation = 0f

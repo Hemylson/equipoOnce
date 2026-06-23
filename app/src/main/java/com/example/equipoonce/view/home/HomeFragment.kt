@@ -23,6 +23,8 @@ import androidx.navigation.fragment.findNavController
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.example.equipoonce.R
+import android.widget.Toast
+import com.example.equipoonce.view.auth.LoginActivity
 import com.example.equipoonce.view.challenge.ChallengeUiState
 import com.example.equipoonce.view.challenge.ChallengeViewModel
 import com.example.equipoonce.view.shared.SharedAudioViewModel
@@ -112,6 +114,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             animarBoton(it)
             findNavController().navigate(R.id.action_home_to_instructions)
         }
+
+        view.findViewById<ImageButton>(R.id.btnLogout).setOnClickListener {
+            animarBoton(it)
+            viewModel.cerrarSesion()
+        }
+    }
+
+    private fun irALogin() {
+        audioViewModel.pauseBackground()
+        Toast.makeText(requireContext(), R.string.home_logout_ok, Toast.LENGTH_SHORT).show()
+        val intent = Intent(requireContext(), LoginActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(intent)
+        requireActivity().finish()
     }
 
     private fun animarBoton(view: View) {
@@ -196,6 +213,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     if (params != null && isAdded && !parentFragmentManager.isStateSaved) {
                         playBottleSpin(params)
                         viewModel.onSpinEventConsumed()
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.logoutEvent.collect { cerrar ->
+                    if (cerrar) {
+                        viewModel.onLogoutHandled()
+                        irALogin()
                     }
                 }
             }
