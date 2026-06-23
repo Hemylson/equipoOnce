@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -11,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.equipoonce.R
 import com.example.equipoonce.databinding.ActivitySplashBinding
+import com.example.equipoonce.view.auth.LoginActivity
 import com.example.equipoonce.view.main.MainActivity
 import kotlinx.coroutines.launch
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,25 +28,42 @@ class SplashActivity : AppCompatActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // CA-1: Sin toolbar
         supportActionBar?.hide()
 
+        // CA-1: Pantalla completa sin status bar
         @Suppress("DEPRECATION")
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
 
-        binding.ivBottle.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_bottle_bounce))
-        binding.tvPicoBotella.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_fade_in))
+        // Animaciones de la botella y el texto
+        val bounceAnim = AnimationUtils.loadAnimation(this, R.anim.anim_bottle_bounce)
+        binding.ivBottle.startAnimation(bounceAnim)
 
-        // lifecycleScope + repeatOnLifecycle garantiza que el observer se cancela
-        // automáticamente si la Activity se destruye antes del delay
+        val fadeInAnim = AnimationUtils.loadAnimation(this, R.anim.anim_fade_in)
+        binding.tvPicoBotella.startAnimation(fadeInAnim)
+
+        // CA-3: El back en el splash cierra la app, no navega hacia atrás
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finishAffinity()
+            }
+        })
+
+        observarDestino()
+        viewModel.iniciarSplash()
+    }
+
+    private fun observarDestino() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.navegarAlHome.collect { shouldNavigate ->
-                    if (shouldNavigate) {
-                        viewModel.onNavegado()
-                        navigateToMain()
+                viewModel.destination.collect { destino ->
+                    when (destino) {
+                        is SplashDestination.Home -> navigateToMain()
+                        is SplashDestination.Login -> navigateToLogin()
+                        null -> Unit // todavía esperando los 5 segundos
                     }
                 }
             }
@@ -53,6 +72,11 @@ class SplashActivity : AppCompatActivity() {
 
     private fun navigateToMain() {
         startActivity(Intent(this, MainActivity::class.java))
+        finish()
+    }
+
+    private fun navigateToLogin() {
+        startActivity(Intent(this, LoginActivity::class.java))
         finish()
     }
 }

@@ -29,6 +29,12 @@
             </intent-filter>
         </activity>
 
+        <!-- LoginActivity (HU 1.0 / 2.0) -->
+        <activity
+            android:name=".view.auth.LoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.EquipoOnce.NoActionBar" />
+
         <!-- MainActivity con nueva ruta de paquete -->
         <activity
             android:name=".view.main.MainActivity"
