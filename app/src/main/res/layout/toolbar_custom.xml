@@ -76,6 +76,17 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/cd_compartir" />
 
+        <ImageButton
+            android:id="@+id/btnLogout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:src="@drawable/ic_logout"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_logout" />
+
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
