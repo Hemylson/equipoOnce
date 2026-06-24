@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "5366607838",
+    "project_id": "equipoonce-14276",
+    "storage_bucket": "equipoonce-14276.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:5366607838:android:4c9ccd8b51ffd5ac03774f",
+        "android_client_info": {
+          "package_name": "com.example.equipoonce"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2XOZf1dZ_8SGPaeGLiD9ck864V8INt_Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

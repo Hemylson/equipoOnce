@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- HU 2.0 C7 — Botón Login naranja; algo más tenue cuando está inhabilitado. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false" android:color="#80FF6B00" />
+    <item android:color="#FF6B00" />
+</selector>

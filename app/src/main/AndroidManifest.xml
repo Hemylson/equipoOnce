@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -16,9 +17,9 @@
         android:usesCleartextTraffic="true"
         android:enableOnBackInvokedCallback="true">
 
-        <!-- CA-1: Tema sin ActionBar para el splash -->
+        <!-- SplashActivity con nueva ruta de paquete -->
         <activity
-            android:name=".ui.splash.SplashActivity"
+            android:name=".view.splash.SplashActivity"
             android:exported="true"
             android:noHistory="true"
             android:theme="@style/Theme.EquipoOnce.NoActionBar">
@@ -28,9 +29,15 @@
             </intent-filter>
         </activity>
 
-        <!-- MainActivity principal -->
+        <!-- LoginActivity (HU 1.0 / 2.0) -->
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".view.auth.LoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.EquipoOnce.NoActionBar" />
+
+        <!-- MainActivity con nueva ruta de paquete -->
+        <activity
+            android:name=".view.main.MainActivity"
             android:exported="false" />
 
     </application>
